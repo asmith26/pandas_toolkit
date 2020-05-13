@@ -1,6 +1,6 @@
 fix-lint:
-	black pandas_toolkit setup.py
-	isort --lines 120 --recursive --use-parentheses --trailing-comma pandas_toolkit setup.py
+	black --line-length=120 pandas_toolkit setup.py
+	isort --lines 120 --recursive --use-parentheses pandas_toolkit setup.py
 
 lint:
 	tox lint
