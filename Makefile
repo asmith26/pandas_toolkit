@@ -1,4 +1,4 @@
-deploy-doc:
+deploy-doc: update-api-doc
 	mkdocs gh-deploy
 
 fix-lint:
@@ -10,3 +10,6 @@ lint:
 
 test-all:
 	tox
+
+update-api-doc:
+	python docs/api_md_generate.py
