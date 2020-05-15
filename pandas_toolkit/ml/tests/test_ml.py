@@ -35,7 +35,3 @@ class TestMachineLearningAccessor(unittest.TestCase):
 
         pd.testing.assert_frame_equal(expected_df_train, actual_df_train, check_exact=True)
         pd.testing.assert_frame_equal(expected_df_test, actual_df_test, check_exact=True)
-
-
-if __name__ == "__main__":
-    unittest.main()

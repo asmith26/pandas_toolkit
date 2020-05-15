@@ -1,4 +1,9 @@
+coverage:
+	coverage run -m nose2 -v
+	coverage report
+
 clean-test:
+	rm .coverage
 	rm -rf .mypy_cache
 	rm -rf .tox
 	rm -rf *.egg-info
