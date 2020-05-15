@@ -1,3 +1,8 @@
+clean-test:
+	rm -rf .mypy_cache
+	rm -rf .tox
+	rm -rf *.egg-info
+
 deploy-doc: update-api-doc
 	mkdocs gh-deploy
 
@@ -8,7 +13,7 @@ fix-lint:
 lint:
 	tox lint
 
-test-all:
+test-all: clean-test
 	tox
 
 update-api-doc:
