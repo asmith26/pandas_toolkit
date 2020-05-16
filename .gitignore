@@ -4,3 +4,4 @@
 .tox
 .mypy_cache
 site
+__pycache__
