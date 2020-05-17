@@ -1,8 +1,8 @@
 import os
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
-from pandas_toolkit import __version__  # type: ignore
+from pandas_toolkit import __version__
 
 _here = os.path.abspath(os.path.dirname(__file__))
 
@@ -18,7 +18,8 @@ setup(
     author="asmith26",
     url="https://github.com/asmith26/pandas_toolkit.git",
     license="Apache-2.0",
-    packages=["pandas_toolkit"],
+    include_package_data=True,
+    packages=find_packages(include=["pandas_toolkit", "pandas_toolkit.*"]),
     install_requires=["pandas"],
     python_requires=">=3.7",
     classifiers=[

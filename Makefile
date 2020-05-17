@@ -1,12 +1,12 @@
-coverage:
-	coverage run -m nose2 -v
-	coverage report
-
 clean-test:
-	rm .coverage
+	rm -f .coverage
 	rm -rf .mypy_cache
 	rm -rf .tox
 	rm -rf *.egg-info
+
+coverage:
+	coverage run -m nose2 -v
+	coverage report
 
 deploy-doc: update-api-doc
 	mkdocs gh-deploy
