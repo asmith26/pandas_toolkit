@@ -1,3 +1,12 @@
+bump2version-patch: test-all
+	bump2version patch
+
+bump2version-minor: test-all
+	bump2version minor
+
+bump2version-major: test-all
+	bump2version major
+
 clean-test:
 	rm -f .coverage
 	rm -rf .mypy_cache
