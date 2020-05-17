@@ -2,17 +2,16 @@ import os
 
 from setuptools import setup
 
+import pandas_toolkit
+
 _here = os.path.abspath(os.path.dirname(__file__))
 
 with open(os.path.join(_here, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
-with open(os.path.join(_here, "pandas_toolkit", "_version.py"), encoding="utf-8") as f:
-    version = f.read()
-
 setup(
     name="pandas_toolkit",
-    version=version,
+    version=pandas_toolkit.__version__,
     description="A collection of pandas accessors to help with common machine learning related functionality.",
     long_description=long_description,
     long_description_content_type="text/markdown",
