@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup
 
-import pandas_toolkit
+from pandas_toolkit import __version__  # type: ignore
 
 _here = os.path.abspath(os.path.dirname(__file__))
 
@@ -11,7 +11,7 @@ with open(os.path.join(_here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="pandas_toolkit",
-    version=pandas_toolkit.__version__,
+    version=__version__,
     description="A collection of pandas accessors to help with common machine learning related functionality.",
     long_description=long_description,
     long_description_content_type="text/markdown",

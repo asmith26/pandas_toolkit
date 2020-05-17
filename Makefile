@@ -16,7 +16,7 @@ fix-lint:
 	isort --lines 120 --recursive --use-parentheses pandas_toolkit setup.py
 
 lint:
-	tox lint
+	tox -e lint
 
 test-all: clean-test
 	tox
