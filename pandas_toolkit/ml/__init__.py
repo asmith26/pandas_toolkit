@@ -8,13 +8,38 @@ class MachineLearningAccessor:
     def __init__(self, df: pd.DataFrame):
         self._df = df
 
+    def standard_scaler(self, column: str) -> pd.Series:
+        """
+        **Parameters**
+        > **column:**  Column denoting feature to standardize..
+
+        **Returns**
+        > Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`
+
+        Examples
+        ```python
+        >>> df = pd.DataFrame({"x": [0, 1],
+                               "y": [0, 1]},
+                               index=[0, 1])
+        >>> df["standard_scaler_x"] = df.ml.standard_scaler(column="x")
+        >>> df["standard_scaler_x"]
+        pd.Series([-1, 1])
+        ```
+        """
+        s = self._df[column]
+        scaler = StandardScaler()
+        arr_scaled_col: np.ndarray = scaler.fit_transform(s.values.reshape(-1, 1))
+        s_scaled_col = pd.Series(data=arr_scaled_col.flatten(), index=self._df.index, dtype=s.dtype)
+        return s_scaled_col
+
     def train_test_split(self, is_train_frac: float) -> pd.Series:
         """
         **Parameters**
         > **is_train_frac:**  Fraction of row being marked as 1 (i.e. is_train = True).
 
         **Returns**
-        > A pd.Series with values 0 and 1 randomly selected with fraction 1-is_train_frac and is_train_frac, respectively.
+        > A pd.Series with values 0 and 1 randomly selected with fraction 1-is_train_frac and is_train_frac,
+          respectively.
 
         Examples
         ```python
@@ -35,25 +60,3 @@ class MachineLearningAccessor:
 
         s_is_train = pd.Series(data=arr_is_train, index=self._df.index, dtype=np.int8)
         return s_is_train
-
-    def standard_scaler(self, column: str) -> pd.Series:
-        """
-        **Parameters**
-        > **column:**  Column denoting feature to standardize..
-
-        **Returns**
-        > Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`
-        Examples
-        ```python
-        >>> df = pd.DataFrame({"x": [0, 1],
-                               "y": [0, 1]},
-                               index=[0, 1])
-        >>> df["standard_scaler_x"] = df.ml.standard_scaler(column="x")
-        >>> df["standard_scaler_x"]
-        pd.Series([-1, 1])
-        """
-        s = self._df[column]
-        scaler = StandardScaler()
-        arr_scaled_col: np.ndarray = scaler.fit_transform(s.values.reshape(-1, 1))
-        s_scaled_col = pd.Series(data=arr_scaled_col.flatten(), index=self._df.index, dtype=s.dtype)
-        return s_scaled_col

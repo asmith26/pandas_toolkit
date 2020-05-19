@@ -20,7 +20,7 @@ setup(
     license="Apache-2.0",
     include_package_data=True,
     packages=find_packages(include=["pandas_toolkit", "pandas_toolkit.*"]),
-    install_requires=["pandas"],
+    install_requires=["pandas", "scikit-learn"],
     python_requires=">=3.7",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",

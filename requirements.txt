@@ -4,8 +4,12 @@
 #
 #    pip-compile
 #
-numpy==1.18.4             # via pandas
+joblib==0.15.1            # via scikit-learn
+numpy==1.18.4             # via pandas, scikit-learn, scipy
 pandas==1.0.3             # via pandas_toolkit (setup.py)
 python-dateutil==2.8.1    # via pandas
 pytz==2020.1              # via pandas
+scikit-learn==0.23.1      # via pandas_toolkit (setup.py)
+scipy==1.4.1              # via scikit-learn
 six==1.14.0               # via python-dateutil
+threadpoolctl==2.0.0      # via scikit-learn
