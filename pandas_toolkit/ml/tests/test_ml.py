@@ -1,5 +1,6 @@
 import unittest
 
+import numpy as np
 import pandas as pd
 
 import pandas_toolkit.ml
@@ -8,30 +9,28 @@ import pandas_toolkit.ml
 class TestMachineLearningAccessor(unittest.TestCase):
     def test_train_test_split_with_sensible_train_frac(self):
         df = pd.DataFrame({"x": [0, 1, 2], "y": [0, 1, 2]}, index=[0, 1, 2])
-        actual_df_train, actual_df_test = df.ml.train_test_split(train_frac=2 / 3, random_seed=0)
 
-        expected_df_train = pd.DataFrame({"x": [2, 1], "y": [2, 1]}, index=[2, 1])
-        expected_df_test = pd.DataFrame({"x": [0], "y": [0]}, index=[0])
+        np.random.seed(1)
+        actual_s = df.ml.train_test_split(is_train_prob=2 / 3)
 
-        pd.testing.assert_frame_equal(expected_df_train, actual_df_train, check_exact=True)
-        pd.testing.assert_frame_equal(expected_df_test, actual_df_test, check_exact=True)
+        expected_s = pd.Series([1, 1, 0])
+
+        pd.testing.assert_series_equal(expected_s, actual_s, check_exact=True)
 
     def test_train_test_split_with_train_frac_eq_1(self):
         df = pd.DataFrame({"x": [0, 1, 2], "y": [0, 1, 2]}, index=[0, 1, 2])
-        actual_df_train, actual_df_test = df.ml.train_test_split(train_frac=1, random_seed=42)
 
-        expected_df_train = df
-        expected_df_test = pd.DataFrame({"x": [], "y": []}).astype("int64")
+        actual_s = df.ml.train_test_split(is_train_prob=1)
 
-        pd.testing.assert_frame_equal(expected_df_train, actual_df_train, check_exact=True)
-        pd.testing.assert_frame_equal(expected_df_test, actual_df_test, check_exact=True)
+        expected_s = pd.Series([1, 1, 1])
+
+        pd.testing.assert_series_equal(expected_s, actual_s, check_exact=True)
 
     def test_train_test_split_with_train_frac_eq_0(self):
         df = pd.DataFrame({"x": [0, 1, 2], "y": [0, 1, 2]}, index=[0, 1, 2])
-        actual_df_train, actual_df_test = df.ml.train_test_split(train_frac=0, random_seed=42)
 
-        expected_df_train = pd.DataFrame({"x": [], "y": []}).astype("int64")
-        expected_df_test = df
+        actual_s = df.ml.train_test_split(is_train_prob=0)
 
-        pd.testing.assert_frame_equal(expected_df_train, actual_df_train, check_exact=True)
-        pd.testing.assert_frame_equal(expected_df_test, actual_df_test, check_exact=True)
+        expected_s = pd.Series([0, 0, 0])
+
+        pd.testing.assert_series_equal(expected_s, actual_s, check_exact=True)

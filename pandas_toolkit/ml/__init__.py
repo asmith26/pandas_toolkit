@@ -1,5 +1,4 @@
-from typing import Tuple
-
+import numpy as np
 import pandas as pd
 
 
@@ -8,27 +7,24 @@ class MachineLearningAccessor:
     def __init__(self, df: pd.DataFrame):
         self._df = df
 
-    def train_test_split(self, train_frac: float, random_seed: int = None) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    def train_test_split(self, is_train_prob: float) -> pd.Series:
         """
         **Parameters**
-        > **train_frac:**  Fraction of the total number of rows to be included in the df_train output.
-        > **random_seed:** Seed for the random number generator (e.g. for reproducible splits).
+        > **is_train_prob:**  Probability of row being marked as 1 (i.e. is_train = True).
 
         **Returns**
-        > A tuple of 2 distinct random samples of the original dataframe.
+        > A pd.Series with values 0 and 1 randomly selected with probability 1-is_train_prob and is_train_prob, respectively.
 
         Examples
         ```python
         >>> df = pd.DataFrame({"x": [0, 1, 2],
                                "y": [0, 1, 2]},
                                index=[0, 1, 2])
-        >>> actual_df_train, actual_df_test = df.ml.train_test_split(train_frac=2/3, random_seed=0)
-        >>> actual_df_train
-        pd.DataFrame({"x": [2, 1], "y": [2, 1]}, index=[2, 1])
-        >>> actual_df_test
-        pd.DataFrame({"x": [0], "y": [0]}, index=[0])
+        >>> df["is_train"] = df.ml.train_test_split(train_frac=2/3)
+        >>> df["is_train"]
+        pd.Series([0, 1, 1])
         ```
         """
-        df_train = self._df.sample(frac=train_frac, random_state=random_seed)
-        df_test = self._df.drop(df_train.index)
-        return df_train, df_test
+        arr_is_train = np.random.choice([0, 1], size=len(self._df), p=[1 - is_train_prob, is_train_prob])
+        s_is_train = pd.Series(arr_is_train, self._df.index)
+        return s_is_train
