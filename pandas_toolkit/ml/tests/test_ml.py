@@ -6,7 +6,7 @@ import pandas as pd
 import pandas_toolkit.ml
 
 
-class TestMachineLearningAccessor(unittest.TestCase):
+class TestTrainTestSplit(unittest.TestCase):
     def test_train_test_split_with_sensible_is_train_frac(self):
         df = pd.DataFrame({"x": [0, 1, 2], "y": [0, 1, 2]}, index=[0, 1, 2])
 
@@ -42,5 +42,16 @@ class TestMachineLearningAccessor(unittest.TestCase):
         actual_s = df.ml.train_test_split(is_train_frac=0)
 
         expected_s = pd.Series([0, 0, 0], dtype=np.int8)
+
+        pd.testing.assert_series_equal(expected_s, actual_s, check_exact=True)
+
+
+class TestStandardScaler(unittest.TestCase):
+    def test_standard_scaler(self):
+        df = pd.DataFrame({"x": [0, 1], "y": [0, 1]}, index=[0, 1])
+
+        actual_s = df.ml.standard_scaler(column="x")
+
+        expected_s = pd.Series([-1, 1])
 
         pd.testing.assert_series_equal(expected_s, actual_s, check_exact=True)

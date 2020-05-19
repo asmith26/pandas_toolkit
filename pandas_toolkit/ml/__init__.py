@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 
 @pd.api.extensions.register_dataframe_accessor("ml")
@@ -32,5 +33,27 @@ class MachineLearningAccessor:
         arr_is_train = np.concatenate([np.ones(num_train), np.zeros(num_test)])
         np.random.shuffle(arr_is_train)
 
-        s_is_train = pd.Series(arr_is_train, self._df.index, dtype=np.int8)
+        s_is_train = pd.Series(data=arr_is_train, index=self._df.index, dtype=np.int8)
         return s_is_train
+
+    def standard_scaler(self, column: str) -> pd.Series:
+        """
+        **Parameters**
+        > **column:**  Column denoting feature to standardize..
+
+        **Returns**
+        > Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`
+        Examples
+        ```python
+        >>> df = pd.DataFrame({"x": [0, 1],
+                               "y": [0, 1]},
+                               index=[0, 1])
+        >>> df["standard_scaler_x"] = df.ml.standard_scaler(column="x")
+        >>> df["standard_scaler_x"]
+        pd.Series([-1, 1])
+        """
+        s = self._df[column]
+        scaler = StandardScaler()
+        arr_scaled_col: np.ndarray = scaler.fit_transform(s.values.reshape(-1, 1))
+        s_scaled_col = pd.Series(data=arr_scaled_col.flatten(), index=self._df.index, dtype=s.dtype)
+        return s_scaled_col
