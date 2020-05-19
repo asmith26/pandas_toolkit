@@ -5,6 +5,7 @@ PACKAGE_NAME = "pandas_toolkit"
 
 accessors = {
     "ML": [
+        pandas_toolkit.ml.MachineLearningAccessor.standard_scaler,
         pandas_toolkit.ml.MachineLearningAccessor.train_test_split,
     ],
 }

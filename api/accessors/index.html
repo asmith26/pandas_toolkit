@@ -258,6 +258,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#standard_scaler-source" class="md-nav__link">
+    standard_scaler [source]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#train_test_split-source" class="md-nav__link">
     train_test_split [source]
   </a>
@@ -315,6 +322,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#standard_scaler-source" class="md-nav__link">
+    standard_scaler [source]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#train_test_split-source" class="md-nav__link">
     train_test_split [source]
   </a>
@@ -348,26 +362,42 @@
                 
                 <h1 id="accessors-api">Accessors API<a class="headerlink" href="#accessors-api" title="Permanent link">&para;</a></h1>
 <h2 id="ml-methods">ML Methods<a class="headerlink" href="#ml-methods" title="Permanent link">&para;</a></h2>
-<h4 id="train_test_split-source"><code>train_test_split</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L11">source</a>]</small></em><a class="headerlink" href="#train_test_split-source" title="Permanent link">&para;</a></h4>
-<p><code>train_test_split</code><em>(self, train_frac: float, random_seed: int = None) -&gt; Tuple[pd.DataFrame, pd.DataFrame]</em></p>
+<h4 id="standard_scaler-source"><code>standard_scaler</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L11">source</a>]</small></em><a class="headerlink" href="#standard_scaler-source" title="Permanent link">&para;</a></h4>
+<p><code>standard_scaler</code><em>(self, column: str) -&gt; pd.Series</em></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>train_frac:</strong>  Fraction of the total number of rows to be included in the df_train output.
-<strong>random_seed:</strong> Seed for the random number generator (e.g. for reproducible splits).</p>
+<p><strong>column:</strong>  Column denoting feature to standardize..</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p>A tuple of 2 distinct random samples of the original dataframe.</p>
+<p>Standardized featured by removing the mean and scaling to unit variance: <code>z = (x - u) / s</code></p>
+</blockquote>
+<p>Examples
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                       <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]},</span>
+                       <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;standard_scaler_x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">standard_scaler</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;standard_scaler_x&quot;</span><span class="p">]</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</code></pre></div></p>
+<h4 id="train_test_split-source"><code>train_test_split</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L35">source</a>]</small></em><a class="headerlink" href="#train_test_split-source" title="Permanent link">&para;</a></h4>
+<p><code>train_test_split</code><em>(self, is_train_frac: float) -&gt; pd.Series</em></p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>is_train_frac:</strong>  Fraction of row being marked as 1 (i.e. is_train = True).</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p>A pd.Series with values 0 and 1 randomly selected with fraction 1-is_train_frac and is_train_frac,
+  respectively.</p>
 </blockquote>
 <p>Examples
 <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
                        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]},</span>
                        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">actual_df_train</span><span class="p">,</span> <span class="n">actual_df_test</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">train_frac</span><span class="o">=</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">actual_df_train</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">actual_df_test</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">]},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;is_train&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">is_train_frac</span><span class="o">=</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;is_train&quot;</span><span class="p">]</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 </code></pre></div></p>
                 
               

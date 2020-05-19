@@ -10,7 +10,9 @@ with open("docs/api/accessors.md", "w") as accessors_file:
         accessors_file.writelines(f"## {accessor_group} Methods\n")
         for accessor in accessors:
             function_name = accessor.__name__
-            function_signature = str(inspect.signature(accessor)).replace("pandas.core.frame.DataFrame", "pd.DataFrame")
+            function_signature = (str(inspect.signature(accessor))
+                                  .replace("pandas.core.frame.DataFrame", "pd.DataFrame")
+                                  .replace("pandas.core.series.Series", "pd.Series"))
             docstring = inspect.getdoc(accessor)
             absolute_file_path = inspect.getfile(accessor)
             file_path = re.sub(f".*/{PACKAGE_NAME}/{PACKAGE_NAME}/", "", absolute_file_path)
@@ -21,3 +23,4 @@ with open("docs/api/accessors.md", "w") as accessors_file:
             accessors_file.writelines(f"`{function_name}`*{function_signature}*\n")
             accessors_file.writelines("\n")
             accessors_file.writelines(f"{docstring}")
+            accessors_file.writelines(f"\n\n")
