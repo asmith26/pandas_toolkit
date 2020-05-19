@@ -19,7 +19,7 @@ with open("docs/api/accessors.md", "w") as accessors_file:
             github_line_number = inspect.findsource(accessor)[1] + 1
             github_source_url = f"{ROOT_GITHUB_URL}{file_path}#L{github_line_number}"
 
-            accessors_file.writelines(f"#### `{function_name}` *<small>[[source]({github_source_url})]</small>*\n")
+            accessors_file.writelines(f"### `{function_name}` *<small>[[source]({github_source_url})]</small>*\n")
             accessors_file.writelines(f"`{function_name}`*{function_signature}*\n")
             accessors_file.writelines("\n")
             accessors_file.writelines(f"{docstring}")
