@@ -16,6 +16,8 @@ clean-test:
 coverage:
 	coverage run -m nose2 -v
 	coverage report
+	coverage html
+	firefox htmlcov/index.html
 
 deploy-doc: update-api-doc
 	mkdocs gh-deploy
