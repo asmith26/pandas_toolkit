@@ -1,4 +1,4 @@
-from typing import List, Tuple, Callable
+from typing import Callable, List, Optional, Tuple
 
 import jax.numpy as jnp
 import numpy as np
@@ -10,13 +10,14 @@ from pandas_toolkit.nn.Model import Model
 from pandas_toolkit.utils.custom_types import Batch
 
 
-def get_batch_numbers(num_rows: int, batch_size: int) -> Tuple[int, jnp.ndarray]:
+def get_batch_numbers(num_rows: int, batch_size: Optional[int]) -> Tuple[int, jnp.ndarray]:
+    batch_numbers: jnp.ndarray
     if batch_size is None:
         num_batches = 1
         batch_numbers = jnp.zeros(num_rows)
     else:
         num_batches = int(num_rows / batch_size) + 1
-        batch_numbers: jnp.ndarray = jnp.repeat(jnp.arange(num_batches), batch_size)[:num_rows]
+        batch_numbers = jnp.repeat(jnp.arange(num_batches), batch_size)[:num_rows]
     return num_batches, batch_numbers
 
 
@@ -32,20 +33,19 @@ class NeuralNetworkAccessor:
     def __init__(self, df: pd.DataFrame):
         self._df = df
 
-    def init(self,
-             x_columns: List[str],
-             y_columns: List[str],
-             net_function: Callable[[jnp.ndarray], jnp.ndarray],
-             loss: str,
-             optimizer: InitUpdate = optix.adam(learning_rate=1e-3),
-
-             # num_epochs: int=1, DON'T DO THIS, JUST USE A FOR LOOP
-             batch_size: int = None,
-             # plot_val_loss=False
-             ) -> pd.DataFrame:
+    def init(
+        self,
+        x_columns: List[str],
+        y_columns: List[str],
+        net_function: Callable[[jnp.ndarray], jnp.ndarray],
+        loss: str,
+        optimizer: InitUpdate = optix.adam(learning_rate=1e-3),
+        # num_epochs: int=1, DON'T DO THIS, JUST USE A FOR LOOP
+        batch_size: int = None,
+        # plot_val_loss=False
+    ) -> pd.DataFrame:
         df = self._df.sample(frac=1)
-        df.num_batches, df["batch_number"] = get_batch_numbers(num_rows=len(df),
-                                                            batch_size=batch_size)
+        df.num_batches, df["batch_number"] = get_batch_numbers(num_rows=len(df), batch_size=batch_size)
         df.set_index("batch_number", inplace=True)
         self._df = df
 

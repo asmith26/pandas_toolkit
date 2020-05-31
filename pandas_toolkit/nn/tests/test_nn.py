@@ -1,8 +1,8 @@
 import unittest
 
 import haiku as hk
-import pandas as pd
 import jax.numpy as jnp
+import pandas as pd
 from jax.nn import relu
 
 import pandas_toolkit.nn
@@ -11,16 +11,14 @@ from pandas_toolkit.nn.Model import Model
 
 class TestInit(unittest.TestCase):
     def test_simple_relu_net(self):
-        df = pd.DataFrame({"x": [0., 1.], "y": [0, 1]}, index=[0, 1])
+        df = pd.DataFrame({"x": [0.0, 1.0], "y": [0, 1]}, index=[0, 1])
 
         def net_function(x: jnp.ndarray) -> jnp.ndarray:
             net = hk.Sequential([relu])
             predictions: jnp.ndarray = net(x)
             return predictions
 
-        df = df.nn.init(x_columns=["x"], y_columns=["y"],
-                        net_function=net_function,
-                        loss="mean_squared_error")
+        df = df.nn.init(x_columns=["x"], y_columns=["y"], net_function=net_function, loss="mean_squared_error")
 
         for _ in range(200):  # num_epochs
             # df = df.nn.augment()
@@ -31,7 +29,10 @@ class TestInit(unittest.TestCase):
 
         actual_predictions = df.model.predict(x=jnp.array([[-1], [0], [1]]))
         expected_predictions = jnp.array([[0], [0], [1]])
-        self.assertTrue((actual_predictions == expected_predictions).all(), f"expected_predictions={expected_predictions}!={actual_predictions}=actual_predictions")
+        self.assertTrue(
+            (actual_predictions == expected_predictions).all(),
+            f"expected_predictions={expected_predictions}!={actual_predictions}=actual_predictions",
+        )
 
         actual_loss = df.model.evaluate(x=jnp.array([[-1], [0], [1]]), y=jnp.array([[0], [0], [1]]))
         expected_loss = 0

@@ -1,4 +1,4 @@
-from typing import Callable, Any
+from typing import Any, Callable
 
 import haiku as hk
 import jax
@@ -13,7 +13,9 @@ OptState = Any
 
 
 class Model(object):
-    def __init__(self, net_function: Callable[[jnp.ndarray], jnp.ndarray], loss: str, optimizer: InitUpdate, batch: Batch):
+    def __init__(
+        self, net_function: Callable[[jnp.ndarray], jnp.ndarray], loss: str, optimizer: InitUpdate, batch: Batch
+    ):
         self.net_transform = hk.transform(net_function)
         self.optimizer = optimizer
 
@@ -32,7 +34,7 @@ class Model(object):
         return self.net_transform.apply(self.params, x)
 
     # @jax.jit
-    def _update(self, x: jnp.ndarray, y: jnp.ndarray):
+    def _update(self, x: jnp.ndarray, y: jnp.ndarray) -> None:
         """Learning rule (stochastic gradient descent)."""
         grads = jax.grad(self.loss_function)(self.params, x, y)
         updates, self.opt_state = self.optimizer.update(grads, self.opt_state)

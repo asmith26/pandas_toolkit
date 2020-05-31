@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from pandas_toolkit.nn.loss import LossNotCurrentlySupportedException, get_loss_function
+from pandas_toolkit.nn.loss import LossNotCurrentlySupportedException, get_loss_function  # isort:skip
 
 
 class TestGetLossFunction(unittest.TestCase):
