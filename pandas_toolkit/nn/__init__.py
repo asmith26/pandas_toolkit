@@ -60,11 +60,24 @@ class NeuralNetworkAccessor:
     def get_model(self) -> Model:
         return self._df.model.copy()
 
-    def update(self) -> pd.DataFrame:
+    def hvplot_losses(self):
+        from streamz import Stream
+        from streamz.dataframe import DataFrame
+        import hvplot.streamz
+
+        self.sdf = DataFrame(Stream(), example=pd.DataFrame({"epoch": [], "training_loss": []}))
+        return self.sdf.hvplot.line(x="epoch", y="training_loss")
+
+    def update(self, hvplot_losses: bool = True) -> pd.DataFrame:
         for batch_number in range(self._df.num_batches):
             batch = get_batch(self._df, self._df.model._x_columns, self._df.model._y_columns, batch_number)
             self._df.model._update(batch.x, batch.y)
 
+        self._df.model.num_epochs += 1
+        if hvplot_losses:
+            df_loss = pd.DataFrame({"epoch": [self._df.model.num_epochs],
+                                    "training_loss": self.evaluate().tolist()})
+            self.sdf.emit(df_loss)
         return self._df
 
     def predict(self, x_columns: List[str] = None) -> pd.Series:

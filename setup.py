@@ -27,6 +27,9 @@ setup(
         "pandas",
         "scikit-learn",
     ],
+    extras_require={
+        "streamz": ["hvplot", "streamz"],
+    },
     python_requires=">=3.7",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",

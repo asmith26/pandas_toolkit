@@ -26,13 +26,13 @@ class Model(object):
         self.params: hk.Params = self.net_transform.init(rng, batch.x)
         self.opt_state: OptState = optimizer.init(self.params)
 
+        self.num_epochs = 0
+
     def copy(self):
         return copy.deepcopy(self)
 
     def evaluate(self, x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
         return self.loss_function(self.params, x, y)
-
-    # def hvplot_val_loss():
 
     def predict(self, x: jnp.ndarray) -> jnp.ndarray:
         return self.net_transform.apply(self.params, x)
