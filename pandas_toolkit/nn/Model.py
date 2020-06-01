@@ -8,14 +8,13 @@ from jax.experimental import optix
 from jax.experimental.optix import InitUpdate
 
 from pandas_toolkit.nn.loss import get_loss_function
-from pandas_toolkit.utils.custom_types import Batch
 
 OptState = Any
 
 
 class Model(object):
     def __init__(
-        self, net_function: Callable[[jnp.ndarray], jnp.ndarray], loss: str, optimizer: InitUpdate, batch: Batch
+        self, net_function: Callable[[jnp.ndarray], jnp.ndarray], loss: str, optimizer: InitUpdate, example_x: jnp.ndarray
     ):
         self.net_transform = hk.transform(net_function)
         self.optimizer = optimizer
@@ -23,7 +22,7 @@ class Model(object):
         self.loss_function = get_loss_function(self.net_transform, loss)
 
         rng = jax.random.PRNGKey(42)
-        self.params: hk.Params = self.net_transform.init(rng, batch.x)
+        self.params: hk.Params = self.net_transform.init(rng, example_x)
         self.opt_state: OptState = optimizer.init(self.params)
 
         self.num_epochs = 0
