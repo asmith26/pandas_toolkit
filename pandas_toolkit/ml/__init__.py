@@ -32,13 +32,13 @@ class MachineLearningAccessor:
         s_scaled_col = pd.Series(data=arr_scaled_col.flatten(), index=self._df.index, dtype=s.dtype)
         return s_scaled_col
 
-    def train_validation_split(self, is_train_frac: float) -> pd.Series:
+    def train_validation_split(self, is_validation_frac: float) -> pd.Series:
         """
         **Parameters**
-        > **is_train_frac:**  Fraction of row being marked as 1 (i.e. is_train = True).
+        > **is_validation_frac:**  Fraction of row being marked as 1 (i.e. is_validation = True).
 
         **Returns**
-        > A pd.Series with values 0 and 1 randomly selected with fraction 1-is_train_frac and is_train_frac,
+        > A pd.Series with values 0 and 1 randomly selected with fraction 1-is_validation_frac and is_validation_frac,
           respectively.
 
         Examples
@@ -46,13 +46,13 @@ class MachineLearningAccessor:
         >>> df = pd.DataFrame({"x": [0, 1, 2],
                                "y": [0, 1, 2]},
                                index=[0, 1, 2])
-        >>> df["is_train"] = df.ml.train_validation_split(is_train_frac=2/3)
-        >>> df["is_train"]
+        >>> df["is_validation"] = df.ml.train_validation_split(is_train_frac=2/3)
+        >>> df["is_validation"]
         pd.Series([0, 1, 1])
         ```
         """
         num_rows = len(self._df)
-        num_train = int(num_rows * is_train_frac)
+        num_train = int(num_rows * is_validation_frac)
         num_test = num_rows - num_train
 
         arr_is_train = np.concatenate([np.ones(num_train), np.zeros(num_test)])
