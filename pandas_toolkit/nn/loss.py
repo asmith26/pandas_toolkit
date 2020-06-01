@@ -1,32 +1,33 @@
-from typing import Callable
+from typing import Callable, Dict
 
 import haiku as hk
 import jax.numpy as jnp
-from sklearn.metrics import mean_squared_error
 
-SKLEARN_METRICS = {"mean_squared_error": mean_squared_error}
-SUPPORTED_LOSSES = list(SKLEARN_METRICS.keys())
+
+def mean_squared_error(y_true: jnp.ndarray, y_pred: jnp.ndarray) -> jnp.ndarray:
+    loss = jnp.average((y_true - y_pred) ** 2)#weights=sample_weight)
+    return loss
+
+
+SUPPORTED_LOSSES: Dict[str, Callable[[jnp.ndarray, jnp.ndarray], jnp.ndarray]] = {"mean_squared_error": mean_squared_error}
 
 
 class LossNotCurrentlySupportedException(Exception):
     def __init__(self, loss: str):
-        super().__init__(f"Loss={loss} is not currently supported. Currently supported losses are: {SUPPORTED_LOSSES}")
+        super().__init__(f"Loss={loss} is not currently supported. Currently supported losses are: {list(SUPPORTED_LOSSES.keys())}")
 
 
 def get_loss_function(
     net_transform: hk.Transformed, loss: str
 ) -> Callable[[hk.Params, jnp.ndarray, jnp.ndarray], jnp.ndarray]:
+    try:
+        loss_function = SUPPORTED_LOSSES[loss]
 
-    if loss in list(SKLEARN_METRICS.keys()):
-        sklearn_metric_function = SKLEARN_METRICS[loss]
-
-        def sklearn_metric_as_loss(params: hk.Params, x: jnp.ndarray, y_true: jnp.ndarray) -> jnp.ndarray:
+        def loss_function_wrapper(params: hk.Params, x: jnp.ndarray, y_true: jnp.ndarray) -> jnp.ndarray:
             y_pred: jnp.ndarray = net_transform.apply(params, x)
-            loss_value: jnp.ndarray = sklearn_metric_function(
-                y_true, y_pred
-            )  # sample_weight or **sklearn_metric_kwargs)
+            loss_value: jnp.ndarray = loss_function(y_true, y_pred)
             return loss_value
 
-        return sklearn_metric_as_loss
-    else:
+        return loss_function_wrapper
+    except KeyError:
         raise LossNotCurrentlySupportedException(loss)
