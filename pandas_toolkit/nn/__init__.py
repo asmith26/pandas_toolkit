@@ -79,7 +79,7 @@ class NeuralNetworkAccessor:
             df_validation.model = self.get_model()
             df_losses = pd.DataFrame({"epoch": [self._df_train.model.num_epochs],
                                       "train_loss": self.evaluate().tolist(),
-                                      "validation_loss": df_validation.evaluate().tolist()})
+                                      "validation_loss": df_validation.nn.evaluate().tolist()})
             self.sdf.emit(df_losses)
         return self._df_train
 
