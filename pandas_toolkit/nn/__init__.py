@@ -43,11 +43,12 @@ class NeuralNetworkAccessor:
         batch_size: int = None,
         # plot_val_loss=False
     ) -> pd.DataFrame:
-        self._df_train._batch_size = batch_size
-        self._df_train._num_batches = _get_num_batches(num_rows=len(self._df_train), batch_size=batch_size)
+        num_rows = len(self._df_train)
+        self._df_train._num_batches = _get_num_batches(num_rows=num_rows, batch_size=batch_size)
+        self._df_train._batch_size = batch_size if batch_size is not None else num_rows
 
         num_features = len(x_columns)
-        example_x = jnp.zeros(shape=(batch_size, num_features))
+        example_x = jnp.zeros(shape=[self._df_train._batch_size, num_features])
         self._df_train.model = Model(net_function, loss, optimizer, example_x)
 
         self._df_train.model._x_columns = x_columns
@@ -69,24 +70,24 @@ class NeuralNetworkAccessor:
     def update(self, df_validation: pd.DataFrame, hvplot_losses: bool = False) -> pd.DataFrame:
         df_train = self._df_train.sample(frac=1)
 
-        for batch_number in range(self._df.num_batches):
-            batch = _get_batch(df_train, batch_number, self._df_train._batch_size, self._df.model._x_columns, self._df.model._y_columns)
-            self._df.model._update(batch.x, batch.y)
+        for batch_number in range(self._df_train._num_batches):
+            batch = _get_batch(df_train, batch_number, self._df_train._batch_size, self._df_train.model._x_columns, self._df_train.model._y_columns)
+            self._df_train.model._update(batch.x, batch.y)
 
-        self._df.model.num_epochs += 1
+        self._df_train.model.num_epochs += 1
         if hvplot_losses:
             df_validation.model = self.get_model()
-            df_losses = pd.DataFrame({"epoch": [self._df.model.num_epochs],
+            df_losses = pd.DataFrame({"epoch": [self._df_train.model.num_epochs],
                                       "train_loss": self.evaluate().tolist(),
                                       "validation_loss": df_validation.evaluate().tolist()})
             self.sdf.emit(df_losses)
-        return self._df
+        return self._df_train
 
     def predict(self, x_columns: List[str] = None) -> pd.Series:
         if x_columns is None:
-            x_columns = self._df.model._x_columns
-        x = jnp.array(self._df[x_columns].values)
-        predictions: jnp.array =  self._df.model.predict(x)
+            x_columns = self._df_train.model._x_columns
+        x = jnp.array(self._df_train[x_columns].values)
+        predictions: jnp.array =  self._df_train.model.predict(x)
         num_features = predictions.shape[1]
         if num_features == 1:
             return predictions.flatten()
@@ -94,9 +95,9 @@ class NeuralNetworkAccessor:
 
     def evaluate(self, x_columns: List[str] = None, y_columns: List[str] = None) -> pd.Series:
         if x_columns is None:
-            x_columns = self._df.model._x_columns
+            x_columns = self._df_train.model._x_columns
         if y_columns is None:
-            y_columns = self._df.model._y_columns
-        x = jnp.array(self._df[x_columns].values)
-        y = jnp.array(self._df[y_columns].values)
-        return self._df.model.evaluate(x, y)
+            y_columns = self._df_train.model._y_columns
+        x = jnp.array(self._df_train[x_columns].values)
+        y = jnp.array(self._df_train[y_columns].values)
+        return self._df_train.model.evaluate(x, y)
