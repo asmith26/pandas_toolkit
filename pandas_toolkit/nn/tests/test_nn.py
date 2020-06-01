@@ -20,7 +20,7 @@ class TestInit(unittest.TestCase):
 
         df = df.nn.init(x_columns=["x"], y_columns=["y"], net_function=net_function, loss="mean_squared_error")
 
-        for _ in range(200):  # num_epochs
+        for _ in range(10):  # num_epochs
             # df = df.nn.augment()
             # df = df.nn.shuffle()
             df = df.nn.update()
