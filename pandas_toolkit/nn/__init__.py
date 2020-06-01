@@ -52,17 +52,36 @@ class NeuralNetworkAccessor:
         batch0 = get_batch(df, x_columns, y_columns, batch_number=0)
         self._df.model = Model(net_function, loss, optimizer, batch0)
 
-        self._df._x_columns = x_columns
-        self._df._y_columns = y_columns
+        self._df.model._x_columns = x_columns
+        self._df.model._y_columns = y_columns
 
         return self._df
 
-    # def get_model(self) -> Model:
-    #     return self._df.model.copy()
+    def get_model(self) -> Model:
+        return self._df.model.copy()
 
     def update(self) -> pd.DataFrame:
         for batch_number in range(self._df.num_batches):
-            batch = get_batch(self._df, self._df._x_columns, self._df._y_columns, batch_number)
+            batch = get_batch(self._df, self._df.model._x_columns, self._df.model._y_columns, batch_number)
             self._df.model._update(batch.x, batch.y)
 
         return self._df
+
+    def predict(self, x_columns: List[str] = None) -> pd.Series:
+        if x_columns is None:
+            x_columns = self._df.model._x_columns
+        x = jnp.array(self._df[x_columns].values)
+        predictions: jnp.array =  self._df.model.predict(x)
+        num_features = predictions.shape[1]
+        if num_features == 1:
+            return predictions.flatten()
+        return predictions
+
+    def evaluate(self, x_columns: List[str] = None, y_columns: List[str] = None) -> pd.Series:
+        if x_columns is None:
+            x_columns = self._df.model._x_columns
+        if y_columns is None:
+            y_columns = self._df.model._y_columns
+        x = jnp.array(self._df[x_columns].values)
+        y = jnp.array(self._df[y_columns].values)
+        return self._df.model.evaluate(x, y)

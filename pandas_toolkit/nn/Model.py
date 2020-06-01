@@ -1,3 +1,4 @@
+import copy
 from typing import Any, Callable
 
 import haiku as hk
@@ -24,6 +25,9 @@ class Model(object):
         rng = jax.random.PRNGKey(42)
         self.params: hk.Params = self.net_transform.init(rng, batch.x)
         self.opt_state: OptState = optimizer.init(self.params)
+
+    def copy(self):
+        return copy.deepcopy(self)
 
     def evaluate(self, x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
         return self.loss_function(self.params, x, y)
