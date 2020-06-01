@@ -1,3 +1,4 @@
+import math
 from typing import Callable, List, Optional, Tuple
 
 import jax.numpy as jnp
@@ -10,15 +11,13 @@ from pandas_toolkit.nn.Model import Model
 from pandas_toolkit.utils.custom_types import Batch
 
 
-def get_batch_numbers(num_rows: int, batch_size: Optional[int]) -> Tuple[int, jnp.ndarray]:
-    batch_numbers: jnp.ndarray
+def _get_num_batches(num_rows: int, batch_size: Optional[int]) -> Tuple[int, jnp.ndarray]:
     if batch_size is None:
-        num_batches = 1
-        batch_numbers = jnp.zeros(num_rows)
-    else:
-        num_batches = int(num_rows / batch_size) + 1
-        batch_numbers = jnp.repeat(jnp.arange(num_batches), batch_size)[:num_rows]
-    return num_batches, batch_numbers
+        return 1
+    num_batches = num_rows / batch_size
+    if math.ceil(num_batches) == math.floor(num_batches):
+        return num_batches
+    return int(num_batches) + 1
 
 
 def get_batch(df: pd.DataFrame, x_columns: List[str], y_columns: List[str], batch_number: int) -> Batch:
@@ -44,12 +43,7 @@ class NeuralNetworkAccessor:
         batch_size: int = None,
         # plot_val_loss=False
     ) -> pd.DataFrame:
-        df = self._df.sample(frac=1)
-        df.num_batches, df["batch_number"] = get_batch_numbers(num_rows=len(df), batch_size=batch_size)
-        df.set_index("batch_number", inplace=True)
-        self._df = df
-
-        batch0 = get_batch(df, x_columns, y_columns, batch_number=0)
+        self._df.num_batches
         self._df.model = Model(net_function, loss, optimizer, batch0)
 
         self._df.model._x_columns = x_columns
@@ -65,19 +59,33 @@ class NeuralNetworkAccessor:
         from streamz.dataframe import DataFrame
         import hvplot.streamz
 
-        self.sdf = DataFrame(Stream(), example=pd.DataFrame({"epoch": [], "training_loss": []}))
-        return self.sdf.hvplot.line(x="epoch", y="training_loss")
+        self.sdf = DataFrame(Stream(), example=pd.DataFrame({"epoch": [], "train_loss": [], "validation_loss": []}))
+        return self.sdf.hvplot.line(x="epoch", y=["train_loss", "validation_loss"])
 
-    def update(self, hvplot_losses: bool = False) -> pd.DataFrame:
+    def update(self, df_validation: pd.DataFrame, hvplot_losses: bool = False) -> pd.DataFrame:
+        # df = self._df.sample(frac=1)
+        # df_train = df.query(f"{is_validation_data_column} == 0")
+        # df_validation = df.query(f"{is_validation_data_column} == 1")
+        #
+        # df.num_batches, df.train["batch_number"] = get_batch_numbers(
+        #     num_rows=len(df.train), batch_size=batch_size)
+        # df.validation["batch_number"] = -1
+        # self._df =
+        # df.train.set_index("batch_number", inplace=True)
+        #
+        # batch0 = get_batch(df, x_columns, y_columns, batch_number=0)
+
         for batch_number in range(self._df.num_batches):
             batch = get_batch(self._df, self._df.model._x_columns, self._df.model._y_columns, batch_number)
             self._df.model._update(batch.x, batch.y)
 
         self._df.model.num_epochs += 1
         if hvplot_losses:
-            df_loss = pd.DataFrame({"epoch": [self._df.model.num_epochs],
-                                    "training_loss": self.evaluate().tolist()})
-            self.sdf.emit(df_loss)
+            df_validation.model = self.get_model()
+            df_losses = pd.DataFrame({"epoch": [self._df.model.num_epochs],
+                                      "train_loss": self.evaluate().tolist(),
+                                      "validation_loss": df_validation.evaluate().tolist()})
+            self.sdf.emit(df_losses)
         return self._df
 
     def predict(self, x_columns: List[str] = None) -> pd.Series:
