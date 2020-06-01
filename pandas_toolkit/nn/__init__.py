@@ -68,7 +68,7 @@ class NeuralNetworkAccessor:
         self.sdf = DataFrame(Stream(), example=pd.DataFrame({"epoch": [], "training_loss": []}))
         return self.sdf.hvplot.line(x="epoch", y="training_loss")
 
-    def update(self, hvplot_losses: bool = True) -> pd.DataFrame:
+    def update(self, hvplot_losses: bool = False) -> pd.DataFrame:
         for batch_number in range(self._df.num_batches):
             batch = get_batch(self._df, self._df.model._x_columns, self._df.model._y_columns, batch_number)
             self._df.model._update(batch.x, batch.y)
