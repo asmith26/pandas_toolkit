@@ -1,8 +1,7 @@
 import math
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, List, Optional
 
 import jax.numpy as jnp
-import numpy as np
 import pandas as pd
 from jax.experimental import optix
 from jax.experimental.optix import InitUpdate
@@ -87,7 +86,7 @@ class NeuralNetworkAccessor:
         if x_columns is None:
             x_columns = self._df_train.model._x_columns
         x = jnp.array(self._df_train[x_columns].values)
-        predictions: jnp.array =  self._df_train.model.predict(x)
+        predictions: jnp.array = self._df_train.model.predict(x)
         num_features = predictions.shape[1]
         if num_features == 1:
             return predictions.flatten()

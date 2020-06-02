@@ -1,5 +1,5 @@
 import copy
-from typing import Any, Callable
+from typing import Any, Callable, Tuple
 
 import haiku as hk
 import jax
@@ -27,18 +27,32 @@ class Model(object):
 
         self.num_epochs = 0
 
+        @jax.jit
+        def jitted_update(params: hk.Params, opt_state: OptState, x: jnp.ndarray, y: jnp.ndarray) -> Tuple[hk.Params, OptState]:
+            grads = jax.grad(self.loss_function)(params, x, y)
+            updates, opt_state = self.optimizer.update(grads, opt_state)
+            params = optix.apply_updates(params, updates)
+            return params, opt_state
+        self.jitted_update = jitted_update
+        @jax.jit
+        def jitted_evaluate(params: hk.Params, x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
+            return self.loss_function(params, x, y)
+        self.jitted_evaluate = jitted_evaluate
+        @jax.jit
+        def jitted_predict(params: hk.Params, x: jnp.ndarray) -> jnp.ndarray:
+            return self.net_transform.apply(params, x)
+        self.jitted_predict = jitted_predict
+
     def copy(self):
         return copy.deepcopy(self)
 
     def evaluate(self, x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
-        return self.loss_function(self.params, x, y)
+        return self.jitted_evaluate(self.params, x, y)
 
     def predict(self, x: jnp.ndarray) -> jnp.ndarray:
-        return self.net_transform.apply(self.params, x)
+        return self.jitted_predict(self.params, x)
 
-    # @jax.jit
     def _update(self, x: jnp.ndarray, y: jnp.ndarray) -> None:
-        """Learning rule (stochastic gradient descent)."""
-        grads = jax.grad(self.loss_function)(self.params, x, y)
-        updates, self.opt_state = self.optimizer.update(grads, self.opt_state)
-        self.params = optix.apply_updates(self.params, updates)
+        """Learning rule (e.g. stochastic gradient descent)."""
+        self.params, self.opt_state = self.jitted_update(self.params, self.opt_state, x, y)
+

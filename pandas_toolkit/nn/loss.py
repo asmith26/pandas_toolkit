@@ -1,6 +1,7 @@
 from typing import Callable, Dict
 
 import haiku as hk
+import jax
 import jax.numpy as jnp
 
 
@@ -23,6 +24,7 @@ def get_loss_function(
     try:
         loss_function = SUPPORTED_LOSSES[loss]
 
+        @jax.jit
         def loss_function_wrapper(params: hk.Params, x: jnp.ndarray, y_true: jnp.ndarray) -> jnp.ndarray:
             y_pred: jnp.ndarray = net_transform.apply(params, x)
             loss_value: jnp.ndarray = loss_function(y_true, y_pred)
