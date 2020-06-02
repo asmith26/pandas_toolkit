@@ -6,3 +6,4 @@
 site
 __pycache__
 htmlcov
+.ipynb_checkpoints

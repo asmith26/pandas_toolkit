@@ -59,7 +59,7 @@ class NeuralNetworkAccessor:
     def get_model(self) -> Model:
         return self._df_train.model.copy()
 
-    def hvplot_losses(self):
+    def hvplot_losses(self):  # pragma: no cover
         from streamz import Stream
         from streamz.dataframe import DataFrame
         import hvplot.streamz
@@ -75,7 +75,7 @@ class NeuralNetworkAccessor:
             self._df_train.model._update(batch.x, batch.y)
 
         self._df_train.model.num_epochs += 1
-        if hvplot_losses:
+        if hvplot_losses:  # pragma: no cover
             df_validation.model = self.get_model()
             df_losses = pd.DataFrame({"epoch": [self._df_train.model.num_epochs],
                                       "train_loss": self.evaluate().tolist(),
