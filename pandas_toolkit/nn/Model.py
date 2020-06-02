@@ -21,11 +21,9 @@ class Model(object):
 
         self.loss_function = get_loss_function(self.net_transform, loss)
 
-        rng = jax.random.PRNGKey(42)
-        self.params: hk.Params = self.net_transform.init(rng, example_x)
+        self._example_x = example_x
+        self.reset_params()
         self.opt_state: OptState = optimizer.init(self.params)
-
-        self.num_epochs = 0
 
         @jax.jit
         def jitted_update(params: hk.Params, opt_state: OptState, x: jnp.ndarray, y: jnp.ndarray) -> Tuple[hk.Params, OptState]:
@@ -56,3 +54,8 @@ class Model(object):
         """Learning rule (e.g. stochastic gradient descent)."""
         self.params, self.opt_state = self.jitted_update(self.params, self.opt_state, x, y)
 
+    def reset_params(self):
+        self.num_epochs = 0
+
+        rng = jax.random.PRNGKey(42)
+        self.params: hk.Params = self.net_transform.init(rng, self._example_x)
