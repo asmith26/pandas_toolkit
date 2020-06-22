@@ -6,7 +6,7 @@ coverage==5.1
 flake8==3.8.3
 flake8-isort==3.0.0
 mkdocs==1.1.2
-mypy==0.780
+mypy==0.781
 nose2==0.9.2
 pip-tools==5.2.1
 tox==3.15.2
