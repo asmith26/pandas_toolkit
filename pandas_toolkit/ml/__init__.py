@@ -32,31 +32,25 @@ class MachineLearningAccessor:
         s_scaled_col = pd.Series(data=arr_scaled_col.flatten(), index=self._df.index, dtype=s.dtype)
         return s_scaled_col
 
-    def train_test_split(self, is_train_frac: float) -> pd.Series:
+    def train_validation_split(self, train_frac: float, random_seed: int = None) -> pd.Series:
         """
         **Parameters**
-        > **is_train_frac:**  Fraction of row being marked as 1 (i.e. is_train = True).
+        > **train_frac:**  Fraction of rows to be added to df_train
+        > **random_seed:** Seed for the random number generator (e.g. for reproducible splits)
 
         **Returns**
-        > A pd.Series with values 0 and 1 randomly selected with fraction 1-is_train_frac and is_train_frac,
-          respectively.
+        > A Tuple of pd.DataFrame representing df_train and df_validation
 
         Examples
         ```python
         >>> df = pd.DataFrame({"x": [0, 1, 2],
                                "y": [0, 1, 2]},
                                index=[0, 1, 2])
-        >>> df["is_train"] = df.ml.train_test_split(is_train_frac=2/3)
-        >>> df["is_train"]
-        pd.Series([0, 1, 1])
+        >>> df_train, df_validation = df.ml.train_validation_split(train_frac=2/3)
+        >>> df_train, df_validation
+        pd.DataFrame({"x": [0, 1], "y": [0, 1]}, index=[0, 1]), pd.DataFrame({"x": [2], "y": [2]}, index=[2])
         ```
         """
-        num_rows = len(self._df)
-        num_train = int(num_rows * is_train_frac)
-        num_test = num_rows - num_train
-
-        arr_is_train = np.concatenate([np.ones(num_train), np.zeros(num_test)])
-        np.random.shuffle(arr_is_train)
-
-        s_is_train = pd.Series(data=arr_is_train, index=self._df.index, dtype=np.int8)
-        return s_is_train
+        df_train = self._df.sample(frac=train_frac, random_state=random_seed)
+        df_validation = self._df.drop(labels=df_train.index)
+        return df_train, df_validation

@@ -19,6 +19,8 @@ clean-test:                     ## Remove all coverage, lint, test artifacts
 coverage:                       ## Create python test coverage report and open in firefox
 	coverage run -m nose2 -v
 	coverage report
+	coverage html
+	firefox htmlcov/index.html
 
 deploy-doc: update-api-doc      ## Deploy doc to github pages
 	mkdocs gh-deploy
