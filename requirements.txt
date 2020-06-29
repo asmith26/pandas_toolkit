@@ -9,12 +9,12 @@ git+ssh://git@github.com/deepmind/dm-haiku#egg=dm-haiku  # via pandas_toolkit (s
 jax==0.1.68               # via pandas_toolkit (setup.py)
 jaxlib==0.1.47            # via pandas_toolkit (setup.py)
 joblib==0.15.1            # via scikit-learn
-numpy==1.18.4             # via dm-haiku, jax, jaxlib, opt-einsum, pandas, scikit-learn, scipy
+numpy==1.19.0             # via dm-haiku, jax, jaxlib, opt-einsum, pandas, scikit-learn, scipy
 opt-einsum==3.2.1         # via jax
-pandas==1.0.3             # via pandas_toolkit (setup.py)
+pandas==1.0.5             # via pandas_toolkit (setup.py)
 python-dateutil==2.8.1    # via pandas
 pytz==2020.1              # via pandas
 scikit-learn==0.23.1      # via pandas_toolkit (setup.py)
-scipy==1.4.1              # via jaxlib, scikit-learn
+scipy==1.5.0              # via jaxlib, scikit-learn
 six==1.15.0               # via absl-py, python-dateutil
-threadpoolctl==2.0.0      # via scikit-learn
+threadpoolctl==2.1.0      # via scikit-learn

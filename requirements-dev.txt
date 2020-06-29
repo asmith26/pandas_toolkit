@@ -3,10 +3,10 @@ bandit==1.6.2
 black==19.10b0
 bump2version==1.0.0
 coverage==5.1
-flake8==3.8.1
+flake8==3.8.3
 flake8-isort==3.0.0
 mkdocs==1.1.2
-mypy==0.770
+mypy==0.782
 nose2==0.9.2
-pip-tools==5.1.2
-tox==3.15.1
+pip-tools==5.2.1
+tox==3.16.0
