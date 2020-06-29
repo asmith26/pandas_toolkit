@@ -1,16 +1,14 @@
 import copy
-from typing import Any, Callable, List, Tuple
+from typing import Callable, List, Tuple
 
 import haiku as hk
 import jax
 import jax.numpy as jnp
 from jax.experimental import optix
-from jax.experimental.optix import InitUpdate
+from jax.experimental.optix import InitUpdate, OptState
 
 from pandas_toolkit.nn.loss import get_loss_function
 from pandas_toolkit.utils.custom_types import ModelType
-
-OptState = Any
 
 
 class Model(object):
