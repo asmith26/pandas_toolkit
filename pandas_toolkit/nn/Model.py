@@ -1,5 +1,5 @@
 import copy
-from typing import Any, Callable, Tuple
+from typing import Any, Callable, List, Tuple
 
 import haiku as hk
 import jax
@@ -8,13 +8,18 @@ from jax.experimental import optix
 from jax.experimental.optix import InitUpdate
 
 from pandas_toolkit.nn.loss import get_loss_function
+from pandas_toolkit.utils.custom_types import ModelType
 
 OptState = Any
 
 
 class Model(object):
     def __init__(
-        self, net_function: Callable[[jnp.ndarray], jnp.ndarray], loss: str, optimizer: InitUpdate, example_x: jnp.ndarray
+        self,
+        net_function: Callable[[jnp.ndarray], jnp.ndarray],
+        loss: str,
+        optimizer: InitUpdate,
+        example_x: jnp.ndarray,
     ):
         self.net_transform = hk.transform(net_function)
         self.optimizer = optimizer
@@ -23,25 +28,36 @@ class Model(object):
 
         self._example_x = example_x
         self.reset_params()
+        self.params: hk.Params
         self.opt_state: OptState = optimizer.init(self.params)
 
+        self._x_columns: List[str]
+        self._y_columns: List[str]
+
         @jax.jit
-        def jitted_update(params: hk.Params, opt_state: OptState, x: jnp.ndarray, y: jnp.ndarray) -> Tuple[hk.Params, OptState]:
+        def jitted_update(
+            params: hk.Params, opt_state: OptState, x: jnp.ndarray, y: jnp.ndarray
+        ) -> Tuple[hk.Params, OptState]:
             grads = jax.grad(self.loss_function)(params, x, y)
             updates, opt_state = self.optimizer.update(grads, opt_state)
             params = optix.apply_updates(params, updates)
             return params, opt_state
+
         self.jitted_update = jitted_update
+
         @jax.jit
         def jitted_evaluate(params: hk.Params, x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
             return self.loss_function(params, x, y)
+
         self.jitted_evaluate = jitted_evaluate
+
         @jax.jit
         def jitted_predict(params: hk.Params, x: jnp.ndarray) -> jnp.ndarray:
             return self.net_transform.apply(params, x)
+
         self.jitted_predict = jitted_predict
 
-    def copy(self):
+    def copy(self) -> ModelType:
         return copy.deepcopy(self)
 
     def evaluate(self, x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
@@ -54,8 +70,8 @@ class Model(object):
         """Learning rule (e.g. stochastic gradient descent)."""
         self.params, self.opt_state = self.jitted_update(self.params, self.opt_state, x, y)
 
-    def reset_params(self):
+    def reset_params(self) -> None:
         self.num_epochs = 0
 
         rng = jax.random.PRNGKey(42)
-        self.params: hk.Params = self.net_transform.init(rng, self._example_x)
+        self.params = self.net_transform.init(rng, self._example_x)

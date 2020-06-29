@@ -6,16 +6,20 @@ import jax.numpy as jnp
 
 
 def mean_squared_error(y_true: jnp.ndarray, y_pred: jnp.ndarray) -> jnp.ndarray:
-    loss = jnp.average((y_true - y_pred) ** 2)#weights=sample_weight)
+    loss = jnp.average((y_true - y_pred) ** 2)  # weights=sample_weight)
     return loss
 
 
-SUPPORTED_LOSSES: Dict[str, Callable[[jnp.ndarray, jnp.ndarray], jnp.ndarray]] = {"mean_squared_error": mean_squared_error}
+SUPPORTED_LOSSES: Dict[str, Callable[[jnp.ndarray, jnp.ndarray], jnp.ndarray]] = {
+    "mean_squared_error": mean_squared_error
+}
 
 
 class LossNotCurrentlySupportedException(Exception):
     def __init__(self, loss: str):
-        super().__init__(f"Loss={loss} is not currently supported. Currently supported losses are: {list(SUPPORTED_LOSSES.keys())}")
+        super().__init__(
+            f"Loss={loss} is not currently supported. Currently supported losses are: {list(SUPPORTED_LOSSES.keys())}"
+        )
 
 
 def get_loss_function(
@@ -30,6 +34,6 @@ def get_loss_function(
             loss_value: jnp.ndarray = loss_function(y_true, y_pred)
             return loss_value
 
-        return loss_function_wrapper
+        return loss_function_wrapper  # type: ignore
     except KeyError:
         raise LossNotCurrentlySupportedException(loss)

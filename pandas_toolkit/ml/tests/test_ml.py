@@ -19,7 +19,7 @@ class TestStandardScaler(unittest.TestCase):
 class TestTrainValidationSplit(unittest.TestCase):
     def test_with_sensible_is_validation_frac(self):
         df = pd.DataFrame({"x": [0, 1, 2], "y": [0, 1, 2]}, index=[0, 1, 2])
-        actual_df_train, actual_df_validation = df.ml.train_validation_split(train_frac=2/3, random_seed=42)
+        actual_df_train, actual_df_validation = df.ml.train_validation_split(train_frac=2 / 3, random_seed=42)
 
         expected_df_train = pd.DataFrame({"x": [0, 1], "y": [0, 1]}, index=[0, 1])
         expected_df_validation = pd.DataFrame({"x": [2], "y": [2]}, index=[2])

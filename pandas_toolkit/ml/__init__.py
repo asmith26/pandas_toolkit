@@ -32,7 +32,7 @@ class MachineLearningAccessor:
         s_scaled_col = pd.Series(data=arr_scaled_col.flatten(), index=self._df.index, dtype=s.dtype)
         return s_scaled_col
 
-    def train_validation_split(self, train_frac: float, random_seed: int=None) -> pd.Series:
+    def train_validation_split(self, train_frac: float, random_seed: int = None) -> pd.Series:
         """
         **Parameters**
         > **train_frac:**  Fraction of rows to be added to df_train

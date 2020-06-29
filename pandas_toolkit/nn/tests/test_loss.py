@@ -2,8 +2,8 @@ import unittest
 from unittest.mock import MagicMock
 
 import jax.numpy as jnp
-from pandas_toolkit.nn.loss import LossNotCurrentlySupportedException, \
-    get_loss_function, mean_squared_error  # isort:skip
+
+from pandas_toolkit.nn.loss import LossNotCurrentlySupportedException, get_loss_function, mean_squared_error
 
 
 class TestGetLossFunction(unittest.TestCase):
@@ -20,5 +20,5 @@ class TestMeanSquaredError(unittest.TestCase):
         # Below based on scikit-learn examples
         actual_loss = mean_squared_error(jnp.array([3, -0.5, 2, 7]), jnp.array([2.5, 0.0, 2, 8]))
         self.assertEqual(0.375, actual_loss)
-        actual_loss = mean_squared_error(jnp.array([[0.5, 1],[-1, 1],[7, -6]]), jnp.array([[0, 2],[-1, 2],[8, -5]]))
+        actual_loss = mean_squared_error(jnp.array([[0.5, 1], [-1, 1], [7, -6]]), jnp.array([[0, 2], [-1, 2], [8, -5]]))
         self.assertEqual(0.7083333, actual_loss)

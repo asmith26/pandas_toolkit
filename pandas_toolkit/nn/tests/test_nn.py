@@ -7,7 +7,7 @@ import pandas as pd
 from jax.nn import relu
 
 import pandas_toolkit.nn
-from pandas_toolkit.nn import _get_num_batches, _get_batch
+from pandas_toolkit.nn import _get_batch, _get_num_batches
 from pandas_toolkit.nn.Model import Model
 from pandas_toolkit.utils.custom_types import Batch
 
@@ -37,21 +37,32 @@ class TestGetNumBatches(unittest.TestCase):
 
 class TestGetBatch(unittest.TestCase):
     def test_returns_correctly(self):
-        df_train = pd.DataFrame({"x": [0, 1, 2],
-                                 "y": [10, 11, 12]})
+        df_train = pd.DataFrame({"x": [0, 1, 2], "y": [10, 11, 12]})
         batch_size = 2
 
         batch_number = 0
         actual_batch = _get_batch(df_train, batch_number, batch_size, x_columns=["x"], y_columns=["y"])
         expected_batch = Batch(x=jnp.array([[0], [1]]), y=jnp.array([[10], [11]]))
-        self.assertTrue((actual_batch.x == expected_batch.x).all(), f"expected_batch.x={expected_batch.x}!={actual_batch.x}=actual_batch.x")
-        self.assertTrue((actual_batch.y == expected_batch.y).all(), f"expected_batch.y={expected_batch.y}!={actual_batch.y}=actual_batch.y")
+        self.assertTrue(
+            (actual_batch.x == expected_batch.x).all(),
+            f"expected_batch.x={expected_batch.x}!={actual_batch.x}=actual_batch.x",
+        )
+        self.assertTrue(
+            (actual_batch.y == expected_batch.y).all(),
+            f"expected_batch.y={expected_batch.y}!={actual_batch.y}=actual_batch.y",
+        )
 
         batch_number = 1
         actual_batch = _get_batch(df_train, batch_number, batch_size, x_columns=["x"], y_columns=["y"])
         expected_batch = Batch(x=jnp.array([[2]]), y=jnp.array([[12]]))
-        self.assertTrue((actual_batch.x == expected_batch.x).all(), f"expected_batch.x={expected_batch.x}!={actual_batch.x}=actual_batch.x")
-        self.assertTrue((actual_batch.y == expected_batch.y).all(), f"expected_batch.y={expected_batch.y}!={actual_batch.y}=actual_batch.y")
+        self.assertTrue(
+            (actual_batch.x == expected_batch.x).all(),
+            f"expected_batch.x={expected_batch.x}!={actual_batch.x}=actual_batch.x",
+        )
+        self.assertTrue(
+            (actual_batch.y == expected_batch.y).all(),
+            f"expected_batch.y={expected_batch.y}!={actual_batch.y}=actual_batch.y",
+        )
 
 
 class TestWorkflow(unittest.TestCase):
@@ -65,10 +76,9 @@ class TestWorkflow(unittest.TestCase):
             predictions: jnp.ndarray = net(x)
             return predictions
 
-        df_train = df_train.nn.init(x_columns=["x"],
-                                    y_columns=["y"],
-                                    net_function=net_function,
-                                    loss="mean_squared_error")
+        df_train = df_train.nn.init(
+            x_columns=["x"], y_columns=["y"], net_function=net_function, loss="mean_squared_error"
+        )
 
         for _ in range(10):  # num_epochs
             # df = df.nn.augment()

@@ -5,9 +5,9 @@
 #    pip-compile
 #
 absl-py==0.9.0            # via dm-haiku, jax, jaxlib
-git+ssh://git@github.com/deepmind/dm-haiku#egg=dm-haiku  # via pandas_toolkit (setup.py)
-jax==0.1.68               # via pandas_toolkit (setup.py)
-jaxlib==0.1.47            # via pandas_toolkit (setup.py)
+dm-haiku==0.0.1           # via pandas_toolkit (setup.py)
+jax==0.1.72               # via pandas_toolkit (setup.py)
+jaxlib==0.1.50            # via pandas_toolkit (setup.py)
 joblib==0.15.1            # via scikit-learn
 numpy==1.19.0             # via dm-haiku, jax, jaxlib, opt-einsum, pandas, scikit-learn, scipy
 opt-einsum==3.2.1         # via jax

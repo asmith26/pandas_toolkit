@@ -20,16 +20,8 @@ setup(
     license="Apache-2.0",
     include_package_data=True,
     packages=find_packages(include=["pandas_toolkit", "pandas_toolkit.*"]),
-    install_requires=[
-        "jax",
-        "jaxlib",
-        "dm-haiku @ git+ssh://git@github.com/deepmind/dm-haiku#egg=dm-haiku",
-        "pandas",
-        "scikit-learn",
-    ],
-    extras_require={
-        "streamz": ["hvplot", "streamz"],
-    },
+    install_requires=["dm-haiku", "jax", "jaxlib", "pandas", "scikit-learn"],
+    extras_require={"streamz": ["hvplot", "streamz"]},
     python_requires=">=3.7",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",

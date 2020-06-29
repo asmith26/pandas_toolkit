@@ -19,11 +19,15 @@ def _get_num_batches(num_rows: int, batch_size: Optional[int]) -> int:
     return int(num_batches) + 1
 
 
-def _get_batch(df_train: pd.DataFrame, batch_number: int, batch_size: int, x_columns: List[str], y_columns: List[str]) -> Batch:
+def _get_batch(
+    df_train: pd.DataFrame, batch_number: int, batch_size: int, x_columns: List[str], y_columns: List[str]
+) -> Batch:
     start_batch_idx = batch_number * batch_size
     end_batch_idx = (batch_number + 1) * batch_size
     df_train_batch = df_train.iloc[start_batch_idx:end_batch_idx]
-    return Batch(x=jnp.array(df_train_batch.loc[:, x_columns].values), y=jnp.array(df_train_batch.loc[:, y_columns].values))
+    return Batch(
+        x=jnp.array(df_train_batch.loc[:, x_columns].values), y=jnp.array(df_train_batch.loc[:, y_columns].values)
+    )
 
 
 @pd.api.extensions.register_dataframe_accessor("nn")
@@ -56,9 +60,9 @@ class NeuralNetworkAccessor:
         return self._df_train
 
     def get_model(self) -> Model:
-        return self._df_train.model.copy()
+        return self._df_train.model.copy()  # type: ignore
 
-    def hvplot_losses(self):  # pragma: no cover
+    def hvplot_losses(self):  # type: ignore  # pragma: no cover
         from streamz import Stream
         from streamz.dataframe import DataFrame
         import hvplot.streamz
@@ -70,15 +74,25 @@ class NeuralNetworkAccessor:
         df_train = self._df_train.sample(frac=1)
 
         for batch_number in range(self._df_train._num_batches):
-            batch = _get_batch(df_train, batch_number, self._df_train._batch_size, self._df_train.model._x_columns, self._df_train.model._y_columns)
+            batch = _get_batch(
+                df_train,
+                batch_number,
+                self._df_train._batch_size,
+                self._df_train.model._x_columns,
+                self._df_train.model._y_columns,
+            )
             self._df_train.model._update(batch.x, batch.y)
 
         self._df_train.model.num_epochs += 1
         if hvplot_losses:  # pragma: no cover
             df_validation.model = self.get_model()
-            df_losses = pd.DataFrame({"epoch": [self._df_train.model.num_epochs],
-                                      "train_loss": self.evaluate().tolist(),
-                                      "validation_loss": df_validation.nn.evaluate().tolist()})
+            df_losses = pd.DataFrame(
+                {
+                    "epoch": [self._df_train.model.num_epochs],
+                    "train_loss": self.evaluate().tolist(),
+                    "validation_loss": df_validation.nn.evaluate().tolist(),
+                }
+            )
             self.sdf.emit(df_losses)
         return self._df_train
 
