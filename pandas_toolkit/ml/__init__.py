@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -11,10 +13,10 @@ class MachineLearningAccessor:
     def standard_scaler(self, column: str) -> pd.Series:
         """
         **Parameters**
-        > **column:**  Column denoting feature to standardize..
+        > **column:** Column denoting feature to standardize.
 
         **Returns**
-        > Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`
+        > Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`.
 
         Examples
         ```python
@@ -32,14 +34,15 @@ class MachineLearningAccessor:
         s_scaled_col = pd.Series(data=arr_scaled_col.flatten(), index=self._df.index, dtype=s.dtype)
         return s_scaled_col
 
-    def train_validation_split(self, train_frac: float, random_seed: int = None) -> pd.Series:
+    def train_validation_split(self, train_frac: float, random_seed: int = None) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
         **Parameters**
-        > **train_frac:**  Fraction of rows to be added to df_train
-        > **random_seed:** Seed for the random number generator (e.g. for reproducible splits)
+        > **train_frac:** Fraction of rows to be added to df_train.
+
+        > **random_seed:** Seed for the random number generator (e.g. for reproducible splits).
 
         **Returns**
-        > A Tuple of pd.DataFrame representing df_train and df_validation
+        > df_train and df_validation, split from the original dataframe.
 
         Examples
         ```python
@@ -47,8 +50,10 @@ class MachineLearningAccessor:
                                "y": [0, 1, 2]},
                                index=[0, 1, 2])
         >>> df_train, df_validation = df.ml.train_validation_split(train_frac=2/3)
-        >>> df_train, df_validation
-        pd.DataFrame({"x": [0, 1], "y": [0, 1]}, index=[0, 1]), pd.DataFrame({"x": [2], "y": [2]}, index=[2])
+        >>> df_train
+        pd.DataFrame({"x": [0, 1], "y": [0, 1]}, index=[0, 1]),
+        >>> df_validation
+        pd.DataFrame({"x": [2], "y": [2]}, index=[2])
         ```
         """
         df_train = self._df.sample(frac=train_frac, random_state=random_seed)

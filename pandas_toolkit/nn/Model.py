@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 from typing import Callable, List, Tuple
 
@@ -8,7 +10,6 @@ from jax.experimental import optix
 from jax.experimental.optix import InitUpdate, OptState
 
 from pandas_toolkit.nn.loss import get_loss_function
-from pandas_toolkit.utils.custom_types import ModelType
 
 
 class Model(object):
@@ -55,7 +56,7 @@ class Model(object):
 
         self.jitted_predict = jitted_predict
 
-    def copy(self) -> ModelType:
+    def copy(self) -> Model:
         return copy.deepcopy(self)
 
     def evaluate(self, x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
