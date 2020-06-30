@@ -13,10 +13,10 @@ class MachineLearningAccessor:
     def standard_scaler(self, column: str) -> pd.Series:
         """
         **Parameters**
-        > **column:**  Column denoting feature to standardize..
+        > **column:** Column denoting feature to standardize.
 
         **Returns**
-        > Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`
+        > Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`.
 
         Examples
         ```python
@@ -37,12 +37,12 @@ class MachineLearningAccessor:
     def train_validation_split(self, train_frac: float, random_seed: int = None) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
         **Parameters**
-        > **train_frac:**  Fraction of rows to be added to df_train
+        > **train_frac:** Fraction of rows to be added to df_train.
 
-        > **random_seed:** Seed for the random number generator (e.g. for reproducible splits)
+        > **random_seed:** Seed for the random number generator (e.g. for reproducible splits).
 
         **Returns**
-        > df_train and df_validation, split from the original dataframe
+        > df_train and df_validation, split from the original dataframe.
 
         Examples
         ```python

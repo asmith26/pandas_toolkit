@@ -39,5 +39,11 @@ lint-fix:                               ## Automatically fix style violations
 	black --line-length=120 pandas_toolkit setup.py
 	isort --lines 120 --recursive --use-parentheses pandas_toolkit setup.py
 
+pip-compile:                            ## Compile requirements.txt from setup.py
+	pip-compile
+
+pip-sync:                               ## Update your conda/virtual environment to reflect exactly (this will install/upgrade/uninstall everything necessary) what's in requirements.txt
+	pip-sync
+
 test-all: clean                         ## Run all checks with tox
 	tox

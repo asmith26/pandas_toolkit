@@ -69,7 +69,6 @@ class TestWorkflow(unittest.TestCase):
     def test_simple_relu_net(self):
         # Train/Validation data
         df_train = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
-        df_validation = pd.DataFrame({"x": [2], "y": [2]})
 
         def net_function(x: jnp.ndarray) -> jnp.ndarray:
             net = hk.Sequential([relu])
@@ -83,7 +82,7 @@ class TestWorkflow(unittest.TestCase):
         for _ in range(10):  # num_epochs
             # df = df.nn.augment()
             # df = df.nn.shuffle()
-            df_train = df_train.nn.update(df_validation=df_validation)
+            df_train = df_train.nn.update()
 
         self.assertTrue(isinstance(df_train.model, Model), "df.model is not of type pandas_toolkit.nn.Model")
 
