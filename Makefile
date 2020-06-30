@@ -10,7 +10,7 @@ bump2version-minor: test-all    ## Bump package minor version
 bump2version-major: test-all    ## Bump package major version
 	bump2version major
 
-clean-test:                     ## Remove all coverage, lint, test artifacts
+clean:                          ## Remove all coverage, lint, test artifacts
 	rm -f .coverage
 	rm -rf .mypy_cache
 	rm -rf .tox
@@ -22,18 +22,18 @@ coverage:                       ## Create python test coverage report and open i
 	coverage html
 	firefox htmlcov/index.html
 
-deploy-doc: update-api-doc      ## Deploy doc to github pages
+doc-deploy: doc-generate-api    ## Deploy doc to github pages
 	mkdocs gh-deploy
 
-fix-lint:                       ## Automatically fix style violations
-	black --line-length=120 pandas_toolkit setup.py
-	isort --lines 120 --recursive --use-parentheses pandas_toolkit setup.py
+doc-generate-api:               ## Generate API doc
+	python docs/api_md_generate.py
 
 lint:                           ## Run lint checks
 	tox -e lint
 
-test-all: clean-test            ## Run all checks with tox
-	tox
+lint-fix:                       ## Automatically fix style violations
+	black --line-length=120 pandas_toolkit setup.py
+	isort --lines 120 --recursive --use-parentheses pandas_toolkit setup.py
 
-update-api-doc:                 ## Generate API doc
-	python docs/api_md_generate.py
+test-all: clean                 ## Run all checks with tox
+	tox
