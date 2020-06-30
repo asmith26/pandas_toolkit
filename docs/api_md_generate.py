@@ -1,7 +1,24 @@
 import inspect
 import re
+from typing import Callable
 
 from api_md_CONFIG import accessors, ROOT_GITHUB_URL, PACKAGE_NAME
+
+
+def get_pretty_function_signature(function: Callable) -> str:
+    inputs_and_outputs = str(inspect.signature(function))
+    inputs_and_outputs = inputs_and_outputs.replace("pandas.core.frame.DataFrame", "pd.DataFrame")
+    inputs_and_outputs = inputs_and_outputs.replace("pandas.core.series.Series", "pd.Series")
+    # Keep function output str as is
+    inputs, outputs = inputs_and_outputs.split(" -> ")
+    # Colour arguments green, types blue
+    inputs = inputs.replace(", ", "</span>, <span style='color:green'>")
+    inputs = inputs.replace(": ", "</span>: <span style='color:blue'>")
+    inputs = inputs.replace(")", "</span>)")
+    # Fix self
+    inputs = inputs.replace("self</span>,", "self,")
+    return f"{inputs} -> {outputs}"
+
 
 with open("docs/api/accessors.md", "w") as accessors_file:
     accessors_file.writelines("# Accessors API\n")
@@ -10,9 +27,7 @@ with open("docs/api/accessors.md", "w") as accessors_file:
         accessors_file.writelines(f"## {accessor_group} Methods\n")
         for accessor in accessors:
             function_name = accessor.__name__
-            function_signature = (str(inspect.signature(accessor))
-                                  .replace("pandas.core.frame.DataFrame", "pd.DataFrame")
-                                  .replace("pandas.core.series.Series", "pd.Series"))
+            function_signature = get_pretty_function_signature(accessor)
             docstring = inspect.getdoc(accessor)
             absolute_file_path = inspect.getfile(accessor)
             file_path = re.sub(f".*/{PACKAGE_NAME}/{PACKAGE_NAME}/", "", absolute_file_path)
