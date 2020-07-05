@@ -1,8 +1,8 @@
 import math
 from typing import Callable, List, Optional
 
-import jax.numpy as jnp
 import pandas as pd
+from jax import numpy as jnp
 from jax.experimental import optix
 from jax.experimental.optix import InitUpdate
 

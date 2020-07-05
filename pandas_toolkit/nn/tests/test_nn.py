@@ -2,8 +2,8 @@ import unittest
 from unittest.mock import MagicMock
 
 import haiku as hk
-import jax.numpy as jnp
 import pandas as pd
+from jax import numpy as jnp
 from jax.nn import relu
 
 import pandas_toolkit.nn
