@@ -2,7 +2,7 @@ from typing import Callable, Dict
 
 import haiku as hk
 import jax
-import jax.numpy as jnp
+from jax import numpy as jnp
 
 
 def mean_squared_error(y_true: jnp.ndarray, y_pred: jnp.ndarray) -> jnp.ndarray:

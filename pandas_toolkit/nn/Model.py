@@ -5,7 +5,7 @@ from typing import Callable, List, Tuple
 
 import haiku as hk
 import jax
-import jax.numpy as jnp
+from jax import numpy as jnp
 from jax.experimental import optix
 from jax.experimental.optix import InitUpdate, OptState
 
