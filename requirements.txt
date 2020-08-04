@@ -14,7 +14,7 @@ opt-einsum==3.3.0         # via jax
 pandas==1.1.0             # via pandas_toolkit (setup.py)
 python-dateutil==2.8.1    # via pandas
 pytz==2020.1              # via pandas
-scikit-learn==0.23.1      # via pandas_toolkit (setup.py)
+scikit-learn==0.23.2      # via pandas_toolkit (setup.py)
 scipy==1.5.2              # via jaxlib, scikit-learn
 six==1.15.0               # via absl-py, python-dateutil
 threadpoolctl==2.1.0      # via scikit-learn
