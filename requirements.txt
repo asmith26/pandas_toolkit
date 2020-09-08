@@ -6,7 +6,7 @@
 #
 absl-py==0.10.0            # via dm-haiku, jax, jaxlib
 dm-haiku==0.0.1           # via pandas_toolkit (setup.py)
-jax==0.1.75               # via pandas_toolkit (setup.py)
+jax==0.1.76               # via pandas_toolkit (setup.py)
 jaxlib==0.1.52            # via pandas_toolkit (setup.py)
 joblib==0.16.0            # via scikit-learn
 numpy==1.19.1             # via dm-haiku, jax, jaxlib, opt-einsum, pandas, scikit-learn, scipy
