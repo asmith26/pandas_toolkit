@@ -12,7 +12,7 @@ with open(os.path.join(_here, "README.md"), encoding="utf-8") as f:
 setup(
     name="pandas_toolkit",
     version=__version__,
-    description="A collection of pandas accessors to help with common machine learning related functionality.",
+    description="A collection of pandas accessors to help with common machine/deep learning related functionality.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="asmith26",

@@ -79,7 +79,7 @@ class TestWorkflow(unittest.TestCase):
             x_columns=["x"], y_columns=["y"], net_function=net_function, loss="mean_squared_error"
         )
 
-        for _ in range(10):  # num_epochs
+        for _ in range(1):  # num_epochs
             # df = df.nn.augment()
             # df = df.nn.shuffle()
             df_train = df_train.nn.update()
@@ -98,7 +98,7 @@ class TestWorkflow(unittest.TestCase):
         df_new.model = df_train.nn.get_model()  # ToDo probably be pandas_toolkit.nn.load_model(model_path)
 
         actual_predictions = df_new.nn.predict()
-        expected_predictions = jnp.array([0, 0, 22])
+        expected_predictions = jnp.array([[0], [0], [22]])
         self.assertTrue(
             (actual_predictions == expected_predictions).all(),
             f"expected_predictions={expected_predictions}!={actual_predictions}=actual_predictions",

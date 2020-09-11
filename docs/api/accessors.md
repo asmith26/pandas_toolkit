@@ -1,6 +1,7 @@
 # Accessors API
 
 ## df.ml. Methods
+---
 ### `standard_scaler` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L13)]</small>*
 `standard_scaler`*(<span style='color:green'>column</span>: <span style='color:blue'>str</span>) -> pd.Series*
 
@@ -8,7 +9,9 @@
 > **column:** Column denoting feature to standardize.
 
 **Returns**
-> Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`.
+> Standardized featured by removing the mean and scaling to unit variance (via
+  [scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html)):
+  `z = (x - u) / s` (`u` := mean of training samples, `s` := standard deviation of training samples).
 
 Examples
 ```python
@@ -19,8 +22,8 @@ Examples
 >>> df["standard_scaler_x"]
 pd.Series([-1, 1])
 ```
-
-### `train_validation_split` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L37)]</small>*
+---
+### `train_validation_split` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L39)]</small>*
 `train_validation_split`*(<span style='color:green'>train_frac</span>: <span style='color:blue'>float</span>, <span style='color:green'>random_seed</span>: <span style='color:blue'>int = None</span>) -> Tuple[pd.DataFrame, pd.DataFrame]*
 
 **Parameters**
@@ -42,8 +45,9 @@ pd.DataFrame({"x": [0, 1], "y": [0, 1]}, index=[0, 1]),
 >>> df_validation
 pd.DataFrame({"x": [2], "y": [2]}, index=[2])
 ```
-
+---
 ## df.nn. Methods
+---
 ### `init` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L38)]</small>*
 `init`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>net_function</span>: <span style='color:blue'>Callable[[jnp.ndarray] jnp.ndarray]</span>, <span style='color:green'>loss</span>: <span style='color:blue'>str</span>, <span style='color:green'>optimizer</span>: <span style='color:blue'>InitUpdate = optix.adam(learning_rate=1e-3)</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>) -> pd.DataFrame*
 
@@ -56,7 +60,8 @@ pd.DataFrame({"x": [2], "y": [2]}, index=[2])
 function is passed to hk.transform). This should have the signature *net_function(x: jnp.ndarray) ->
 jnp.ndarray*.
 
-> **loss:** Loss function to use. See available loss functions in [jax_toolkit]().
+> **loss:** Loss function to use. See available loss functions in
+[jax_toolkit](https://asmith26.github.io/jax_toolkit/losses_and_metrics/).
 
 > **optimizer:** Optimizer to use. See [jax](https://jax.readthedocs.io/en/latest/jax.experimental.optix.html).
 
@@ -78,8 +83,8 @@ Examples
 >>> for _ in range(10):  # num_epochs
 ...     df_train = df_train.nn.update(df_validation=df_validation)
 ```
-
-### `get_model` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L93)]</small>*
+---
+### `get_model` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L94)]</small>*
 `get_model`*() -> Model*
 
  **Returns**
@@ -91,21 +96,21 @@ Examples
 >>> model = df_train.get_model()
 >>> model.predict(x=jnp.ndarray([42]))
 ```
-
-### `hvplot_losses` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L107)]</small>*
+---
+### `hvplot_losses` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L108)]</small>*
 `hvplot_losses`*() -> None*
 
 **Returns**
-> A Holoviews object for interactive (Bokeh backend), real-time ploting of training and validation loss
+> A Holoviews object for interactive (via Bokeh), real-time ploting of training and validation loss
 curves. For an example usage, see [this notebook](
-https://github.com/asmith26/pandas_toolkit/blob/master/notebooks/sine.ipynb)
+https://github.com/asmith26/pandas_toolkit/blob/master/notebooks/sine.ipynb).
 
 Examples
 ```python
 >>> df_train.nn.hvplot_losses()
 ```
-
-### `update` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L136)]</small>*
+---
+### `update` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L137)]</small>*
 `update`*(<span style='color:green'>df_validation_to_plot</span>: <span style='color:blue'>pd.DataFrame = None</span>) -> pd.DataFrame*
 
 **Parameters**
@@ -119,12 +124,12 @@ Examples
 >>> for _ in range(10):  # num_epochs
 ...     df_train = df_train.nn.update(df_validation_to_plot=df_validation)
 ```
-
-### `predict` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L169)]</small>*
+---
+### `predict` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L170)]</small>*
 `predict`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series*
 
 **Parameters**
-> **x_columns:** Columns to predict on. If None, the same x_columns names used to train the model are used.
+> **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
 
 **Returns**
 > A pd.Series of predictions.
@@ -135,17 +140,18 @@ Examples
 >>> df_new.model = df_train.nn.get_model()
 >>> df_new["predictions"] = df_new.nn.predict()
 ```
-
-### `evaluate` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L193)]</small>*
+---
+### `evaluate` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L191)]</small>*
 `evaluate`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series*
 
 **Parameters**
-> **x_columns:** Columns to predict on. If None, the same x_columns names used to train the model are used.
-> **y_columns:** Columns to compare predictions with. If None, the same y_columns names used to train the model
-are used.
+> **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
+
+> **y_columns:** Columns with true output values to compare predicted values with. If `None`, the same
+y_columns names used to train the model are used.
 
 **Returns**
-> A pd.Series of evalations.
+> A pd.Series of evaluations.
 
 Examples
 ```python
@@ -153,4 +159,4 @@ Examples
 >>> df_test.model = df_train.nn.get_model()
 >>> df_test["evaluation_loss"] = df_test.nn.evaluate()
 ```
-
+---

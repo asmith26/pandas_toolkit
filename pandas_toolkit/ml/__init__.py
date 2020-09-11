@@ -16,7 +16,9 @@ class MachineLearningAccessor:
         > **column:** Column denoting feature to standardize.
 
         **Returns**
-        > Standardized featured by removing the mean and scaling to unit variance: `z = (x - u) / s`.
+        > Standardized featured by removing the mean and scaling to unit variance (via
+          [scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html)):
+          `z = (x - u) / s` (`u` := mean of training samples, `s` := standard deviation of training samples).
 
         Examples
         ```python

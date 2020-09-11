@@ -54,7 +54,8 @@ class NeuralNetworkAccessor:
         function is passed to hk.transform). This should have the signature *net_function(x: jnp.ndarray) ->
         jnp.ndarray*.
 
-        > **loss:** Loss function to use. See available loss functions in [jax_toolkit]().
+        > **loss:** Loss function to use. See available loss functions in
+        [jax_toolkit](https://asmith26.github.io/jax_toolkit/losses_and_metrics/).
 
         > **optimizer:** Optimizer to use. See [jax](https://jax.readthedocs.io/en/latest/jax.experimental.optix.html).
 
@@ -107,9 +108,9 @@ class NeuralNetworkAccessor:
     def hvplot_losses(self):  # type: ignore  # pragma: no cover
         """
         **Returns**
-        > A Holoviews object for interactive (Bokeh backend), real-time ploting of training and validation loss
+        > A Holoviews object for interactive (via Bokeh), real-time ploting of training and validation loss
         curves. For an example usage, see [this notebook](
-        https://github.com/asmith26/pandas_toolkit/blob/master/notebooks/sine.ipynb)
+        https://github.com/asmith26/pandas_toolkit/blob/master/notebooks/sine.ipynb).
 
         Examples
         ```python
@@ -169,7 +170,7 @@ class NeuralNetworkAccessor:
     def predict(self, x_columns: List[str] = None) -> pd.Series:
         """
         **Parameters**
-        > **x_columns:** Columns to predict on. If None, the same x_columns names used to train the model are used.
+        > **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
 
         **Returns**
         > A pd.Series of predictions.
@@ -185,20 +186,18 @@ class NeuralNetworkAccessor:
             x_columns = self._df_train.model._x_columns
         x = jnp.array(self._df_train[x_columns].values)
         predictions: jnp.array = self._df_train.model.predict(x)
-        num_features = predictions.shape[1]
-        if num_features == 1:
-            return predictions.flatten()
         return predictions
 
     def evaluate(self, x_columns: List[str] = None, y_columns: List[str] = None) -> pd.Series:
         """
         **Parameters**
-        > **x_columns:** Columns to predict on. If None, the same x_columns names used to train the model are used.
-        > **y_columns:** Columns to compare predictions with. If None, the same y_columns names used to train the model
-        are used.
+        > **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
+
+        > **y_columns:** Columns with true output values to compare predicted values with. If `None`, the same
+        y_columns names used to train the model are used.
 
         **Returns**
-        > A pd.Series of evalations.
+        > A pd.Series of evaluations.
 
         Examples
         ```python

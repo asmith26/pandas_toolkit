@@ -45,6 +45,7 @@ with open("docs/api/accessors.md", "w") as accessors_file:
     accessors_file.writelines("\n")
     for accessor_group, accessors in accessors.items():
         accessors_file.writelines(f"## {accessor_group} Methods\n")
+        accessors_file.writelines("---\n")
         for accessor in accessors:
             function_name = accessor.__name__
             function_signature = get_pretty_function_signature(accessor)
@@ -58,4 +59,4 @@ with open("docs/api/accessors.md", "w") as accessors_file:
             accessors_file.writelines(f"`{function_name}`*{function_signature}*\n")
             accessors_file.writelines("\n")
             accessors_file.writelines(f"{docstring}")
-            accessors_file.writelines(f"\n\n")
+            accessors_file.writelines("\n---\n")
