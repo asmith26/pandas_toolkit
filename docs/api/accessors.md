@@ -67,8 +67,8 @@ jnp.ndarray*.
 
 > **batch_size:** Batch size to use. If not specified, the number of rows in the entire dataframe is used.
 
-> **apply_rng:** If your net_function is non-deterministic, set this value to some `jax.random.PRNGKey(seed)` for
-repeatable outputs.
+> **apply_rng:** If your net_function is non-deterministic, set this value to some `jax.random.PRNGKey(seed)`
+ for repeatable outputs.
 
 **Returns**
 > A pd.DataFrame containing a neural network model ready for training with pandas_toolkit.
@@ -90,9 +90,9 @@ Examples
 ### `get_model` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L98)]</small>*
 `get_model`*() -> Model*
 
- **Returns**
- > A pandas_toolkit.nn.Model object. As this is not linked to a pd.DataFrame, it is much more lightweight
- and could be used in e.g. a production setting.
+**Returns**
+> A pandas_toolkit.nn.Model object. As this is not linked to a pd.DataFrame, it is much more lightweight
+and could be used in e.g. a production setting.
 
 Examples
 ```python
