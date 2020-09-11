@@ -8,8 +8,7 @@ import jax
 from jax import numpy as jnp
 from jax.experimental import optix
 from jax.experimental.optix import InitUpdate, OptState
-
-from pandas_toolkit.nn.loss import get_loss_function
+from jax_toolkit.losses.utils import get_haiku_loss_function
 
 
 class Model(object):
@@ -23,7 +22,7 @@ class Model(object):
         self.net_transform = hk.transform(net_function)
         self.optimizer = optimizer
 
-        self.loss_function = get_loss_function(self.net_transform, loss)
+        self.loss_function = get_haiku_loss_function(self.net_transform, loss)
 
         self._example_x = example_x
         self.reset_params()

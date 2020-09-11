@@ -95,7 +95,7 @@ class TestWorkflow(unittest.TestCase):
 
         # New data
         df_new = pd.DataFrame({"x": [-10, -5, 22]})
-        df_new.model = df_train.nn.get_model()  # ToDo probably be pandas_toolkit.nn.load_model(model_path)
+        df_new.model = df_train.nn.get_model()
 
         actual_predictions = df_new.nn.predict()
         expected_predictions = jnp.array([[0], [0], [22]])

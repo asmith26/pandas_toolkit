@@ -20,7 +20,7 @@ setup(
     license="Apache-2.0",
     include_package_data=True,
     packages=find_packages(include=["pandas_toolkit", "pandas_toolkit.*"]),
-    install_requires=["dm-haiku", "jax", "jaxlib", "pandas", "scikit-learn"],
+    install_requires=["dm-haiku", "jax", "jaxlib", "jax_toolkit", "pandas", "scikit-learn"],
     extras_require={"streamz": ["hvplot", "streamz"]},
     python_requires=">=3.7",
     classifiers=[
