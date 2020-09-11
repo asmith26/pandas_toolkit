@@ -28,7 +28,7 @@ class Model(object):
         self._example_x = example_x
         self.reset_params()
         self.params: hk.Params
-        self.opt_state: OptState = optimizer.init(self.params)
+        self.opt_state: OptState
 
         self._x_columns: List[str]
         self._y_columns: List[str]
@@ -74,3 +74,4 @@ class Model(object):
 
         rng = jax.random.PRNGKey(42)
         self.params = self.net_transform.init(rng, self._example_x)
+        self.opt_state = self.optimizer.init(self.params)
