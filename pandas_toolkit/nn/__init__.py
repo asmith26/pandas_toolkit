@@ -43,6 +43,7 @@ class NeuralNetworkAccessor:
         loss: str,
         optimizer: InitUpdate = optix.adam(learning_rate=1e-3),
         batch_size: int = None,
+        apply_rng: jnp.ndarray = None,
     ) -> pd.DataFrame:
         """
         **Parameters**
@@ -60,6 +61,9 @@ class NeuralNetworkAccessor:
         > **optimizer:** Optimizer to use. See [jax](https://jax.readthedocs.io/en/latest/jax.experimental.optix.html).
 
         > **batch_size:** Batch size to use. If not specified, the number of rows in the entire dataframe is used.
+
+        > **apply_rng:** If your net_function is non-deterministic, set this value to some `jax.random.PRNGKey(seed)` for
+        repeatable outputs.
 
         **Returns**
         > A pd.DataFrame containing a neural network model ready for training with pandas_toolkit.
@@ -84,7 +88,7 @@ class NeuralNetworkAccessor:
 
         num_features = len(x_columns)
         example_x = jnp.zeros(shape=[self._df_train._batch_size, num_features])
-        self._df_train.model = Model(net_function, loss, optimizer, example_x)
+        self._df_train.model = Model(net_function, loss, optimizer, example_x, apply_rng)
 
         self._df_train.model._x_columns = x_columns
         self._df_train.model._y_columns = y_columns

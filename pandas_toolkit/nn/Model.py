@@ -18,8 +18,10 @@ class Model(object):
         loss: str,
         optimizer: InitUpdate,
         example_x: jnp.ndarray,
+        apply_rng: jnp.ndarray = None,
     ):
         self.net_transform = hk.transform(net_function)
+        self.apply_rng = apply_rng
         self.optimizer = optimizer
 
         self.loss_function = get_haiku_loss_function(self.net_transform, loss)
@@ -51,7 +53,7 @@ class Model(object):
 
         @jax.jit
         def jitted_predict(params: hk.Params, x: jnp.ndarray) -> jnp.ndarray:
-            return self.net_transform.apply(params, x)
+            return self.net_transform.apply(params, self.apply_rng, x)
 
         self.jitted_predict = jitted_predict
 

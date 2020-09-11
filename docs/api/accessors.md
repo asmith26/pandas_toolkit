@@ -49,7 +49,7 @@ pd.DataFrame({"x": [2], "y": [2]}, index=[2])
 ## df.nn. Methods
 ---
 ### `init` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L38)]</small>*
-`init`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>net_function</span>: <span style='color:blue'>Callable[[jnp.ndarray] jnp.ndarray]</span>, <span style='color:green'>loss</span>: <span style='color:blue'>str</span>, <span style='color:green'>optimizer</span>: <span style='color:blue'>InitUpdate = optix.adam(learning_rate=1e-3)</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>) -> pd.DataFrame*
+`init`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>net_function</span>: <span style='color:blue'>Callable[[jnp.ndarray] jnp.ndarray]</span>, <span style='color:green'>loss</span>: <span style='color:blue'>str</span>, <span style='color:green'>optimizer</span>: <span style='color:blue'>InitUpdate = optix.adam(learning_rate=1e-3)</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>, <span style='color:green'>apply_rng</span>: <span style='color:blue'>jnp.ndarray = None</span>) -> pd.DataFrame*
 
 **Parameters**
 > **x_columns:** Columns to be used as input for the model.
@@ -66,6 +66,9 @@ jnp.ndarray*.
 > **optimizer:** Optimizer to use. See [jax](https://jax.readthedocs.io/en/latest/jax.experimental.optix.html).
 
 > **batch_size:** Batch size to use. If not specified, the number of rows in the entire dataframe is used.
+
+> **apply_rng:** If your net_function is non-deterministic, set this value to some `jax.random.PRNGKey(seed)` for
+repeatable outputs.
 
 **Returns**
 > A pd.DataFrame containing a neural network model ready for training with pandas_toolkit.
@@ -84,7 +87,7 @@ Examples
 ...     df_train = df_train.nn.update(df_validation=df_validation)
 ```
 ---
-### `get_model` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L94)]</small>*
+### `get_model` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L98)]</small>*
 `get_model`*() -> Model*
 
  **Returns**
@@ -97,7 +100,7 @@ Examples
 >>> model.predict(x=jnp.ndarray([42]))
 ```
 ---
-### `hvplot_losses` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L108)]</small>*
+### `hvplot_losses` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L112)]</small>*
 `hvplot_losses`*() -> None*
 
 **Returns**
@@ -110,7 +113,7 @@ Examples
 >>> df_train.nn.hvplot_losses()
 ```
 ---
-### `update` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L137)]</small>*
+### `update` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L141)]</small>*
 `update`*(<span style='color:green'>df_validation_to_plot</span>: <span style='color:blue'>pd.DataFrame = None</span>) -> pd.DataFrame*
 
 **Parameters**
@@ -125,7 +128,7 @@ Examples
 ...     df_train = df_train.nn.update(df_validation_to_plot=df_validation)
 ```
 ---
-### `predict` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L170)]</small>*
+### `predict` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L174)]</small>*
 `predict`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series*
 
 **Parameters**
@@ -141,7 +144,7 @@ Examples
 >>> df_new["predictions"] = df_new.nn.predict()
 ```
 ---
-### `evaluate` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L191)]</small>*
+### `evaluate` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L195)]</small>*
 `evaluate`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series*
 
 **Parameters**
