@@ -9,3 +9,9 @@ A collection of pandas accessors to help with common machine/deep learning relat
 ```bash
 pip install pandas_toolkit
 ```
+
+Or for additional interactive neural network learning plots:
+
+```bash
+pip install pandas_toolkit[streamz]
+```

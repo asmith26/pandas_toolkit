@@ -9,3 +9,9 @@ For examples, see the [notebooks](https://github.com/asmith26/pandas_toolkit/tre
 ```bash
 pip install pandas_toolkit
 ```
+
+Or for additional interactive neural network learning plots:
+
+```bash
+pip install pandas_toolkit[streamz]
+```
