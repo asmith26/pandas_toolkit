@@ -2,7 +2,7 @@
 
 A collection of pandas accessors to help with common machine/deep learning related functionality.
 
-[Documentation](asmith26.github.io/pandas_toolkit/), [PyPi](https://pypi.org/project/pandas-toolkit/)
+[Documentation](https://asmith26.github.io/pandas_toolkit/), [PyPi](https://pypi.org/project/pandas-toolkit/)
 
 ## Installation
 
