@@ -34,7 +34,7 @@ doc-serve-locally:	doc-generate-api         ## Serve docs locally
 	mkdocs serve
 
 lint:                                        ## Run lint checks
-	bandit --recursive jax_toolkit setup.py
+	bandit --recursive pandas_toolkit setup.py
 	# PyCharm editor uses default 120 line length
 	black --check --diff --line-length=120 pandas_toolkit setup.py
 	isort --check-only --line-length=120 --profile=black pandas_toolkit setup.py
