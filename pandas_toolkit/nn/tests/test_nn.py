@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 import haiku as hk
+import numpy as np
 import pandas as pd
 from jax import numpy as jnp
 from jax.nn import relu
@@ -43,26 +44,14 @@ class TestGetBatch(unittest.TestCase):
         batch_number = 0
         actual_batch = _get_batch(df_train, batch_number, batch_size, x_columns=["x"], y_columns=["y"])
         expected_batch = Batch(x=jnp.array([[0], [1]]), y=jnp.array([[10], [11]]))
-        self.assertTrue(
-            (actual_batch.x == expected_batch.x).all(),
-            f"expected_batch.x={expected_batch.x}!={actual_batch.x}=actual_batch.x",
-        )
-        self.assertTrue(
-            (actual_batch.y == expected_batch.y).all(),
-            f"expected_batch.y={expected_batch.y}!={actual_batch.y}=actual_batch.y",
-        )
+        np.testing.assert_array_equal(expected_batch.x, actual_batch.x)
+        np.testing.assert_array_equal(expected_batch.y, actual_batch.y)
 
         batch_number = 1
         actual_batch = _get_batch(df_train, batch_number, batch_size, x_columns=["x"], y_columns=["y"])
         expected_batch = Batch(x=jnp.array([[2]]), y=jnp.array([[12]]))
-        self.assertTrue(
-            (actual_batch.x == expected_batch.x).all(),
-            f"expected_batch.x={expected_batch.x}!={actual_batch.x}=actual_batch.x",
-        )
-        self.assertTrue(
-            (actual_batch.y == expected_batch.y).all(),
-            f"expected_batch.y={expected_batch.y}!={actual_batch.y}=actual_batch.y",
-        )
+        np.testing.assert_array_equal(expected_batch.x, actual_batch.x)
+        np.testing.assert_array_equal(expected_batch.y, actual_batch.y)
 
 
 class TestWorkflow(unittest.TestCase):
@@ -99,7 +88,4 @@ class TestWorkflow(unittest.TestCase):
 
         actual_predictions = df_new.nn.predict()
         expected_predictions = jnp.array([[0], [0], [22]])
-        self.assertTrue(
-            (actual_predictions == expected_predictions).all(),
-            f"expected_predictions={expected_predictions}!={actual_predictions}=actual_predictions",
-        )
+        np.testing.assert_array_equal(expected_predictions, actual_predictions)
