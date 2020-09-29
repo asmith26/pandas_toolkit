@@ -2,7 +2,38 @@
 
 ## df.ml. Methods
 ---
-### `standard_scaler` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L13)]</small>*
+### `apply_df_train_transform` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L26)]</small>*
+`apply_df_train_transform`*(<span style='color:green'>ml_transform</span>: <span style='color:blue'>MLTransform</span>) -> pd.Series*
+
+**Parameters**
+> **ml_transform:** `pandas_toolkit.ml.MLTransform` object containing transform to apply and column name to
+  apply it (normally via e.g. `df_train.ml.transforms["standard_scaler"]`).
+
+**Returns**
+> Transformed featured using e.g. df_train data statistics.
+
+Examples
+```python
+>>> df_train = pd.DataFrame({"x": [0, 1],
+                             "y": [0, 1]},
+                             index=[0, 1])
+>>> df_validation = pd.DataFrame({"x": [2],
+                                  "y": [2]},
+                                  index=[0])
+>>> df_train["standard_scaler_x"] = df_train.ml.standard_scaler(column="x")
+>>> df_train["standard_scaler_x"]
+pd.Series([-1, 1])
+
+>>> df_train.ml.transforms
+{'standard_scaler': <pandas_toolkit.ml.MLTransform object at 0x7f1af20f0af0>}
+
+>>> df_validation["standard_scaler_x"] = \
+        df_validation.ml.apply_df_train_transform(df_train.ml.transforms["standard_scaler"])
+>>> df_validation["standard_scaler_x"]
+pd.Series([3])
+```
+---
+### `standard_scaler` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L64)]</small>*
 `standard_scaler`*(<span style='color:green'>column</span>: <span style='color:blue'>str</span>) -> pd.Series*
 
 **Parameters**
@@ -13,6 +44,11 @@
   [scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html)):
   `z = (x - u) / s` (`u` := mean of training samples, `s` := standard deviation of training samples).
 
+**Side Effects**
+> Updates the `df.ml.transforms` dictionary with key "standard_scaler" and value
+  `pandas_toolkit.ml.MLTransform` corresponding to the column name and fitted
+  `sklearn.preprocessing.StandardScaler` object.
+
 Examples
 ```python
 >>> df = pd.DataFrame({"x": [0, 1],
@@ -21,9 +57,12 @@ Examples
 >>> df["standard_scaler_x"] = df.ml.standard_scaler(column="x")
 >>> df["standard_scaler_x"]
 pd.Series([-1, 1])
+
+>>> df.ml.transforms
+{'standard_scaler': <pandas_toolkit.ml.MLTransform object at 0x7f1af20f0af0>}
 ```
 ---
-### `train_validation_split` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L39)]</small>*
+### `train_validation_split` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L100)]</small>*
 `train_validation_split`*(<span style='color:green'>train_frac</span>: <span style='color:blue'>float</span>, <span style='color:green'>random_seed</span>: <span style='color:blue'>int = None</span>) -> Tuple[pd.DataFrame, pd.DataFrame]*
 
 **Parameters**

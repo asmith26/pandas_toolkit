@@ -6,6 +6,7 @@ PACKAGE_NAME = "pandas_toolkit"
 
 accessors = {
     "df.ml.": [
+        pandas_toolkit.ml.MachineLearningAccessor.apply_df_train_transform,
         pandas_toolkit.ml.MachineLearningAccessor.standard_scaler,
         pandas_toolkit.ml.MachineLearningAccessor.train_validation_split,
     ],
