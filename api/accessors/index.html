@@ -1,6 +1,7 @@
 
 
 
+
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -11,7 +12,7 @@
       
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.12">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.14">
     
     
       
@@ -19,7 +20,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.4dd2dd8d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.d3202873.min.css">
       
       
     
@@ -251,6 +252,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#apply_df_train_transform-source" class="md-nav__link">
+    apply_df_train_transform [source]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#standard_scaler-source" class="md-nav__link">
     standard_scaler [source]
   </a>
@@ -368,6 +376,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#apply_df_train_transform-source" class="md-nav__link">
+    apply_df_train_transform [source]
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#standard_scaler-source" class="md-nav__link">
     standard_scaler [source]
   </a>
@@ -464,7 +479,38 @@
                 <h1 id="accessors-api">Accessors API<a class="headerlink" href="#accessors-api" title="Permanent link">&para;</a></h1>
 <h2 id="dfml-methods">df.ml. Methods<a class="headerlink" href="#dfml-methods" title="Permanent link">&para;</a></h2>
 <hr />
-<h3 id="standard_scaler-source"><code>standard_scaler</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L13">source</a>]</small></em><a class="headerlink" href="#standard_scaler-source" title="Permanent link">&para;</a></h3>
+<h3 id="apply_df_train_transform-source"><code>apply_df_train_transform</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L26">source</a>]</small></em><a class="headerlink" href="#apply_df_train_transform-source" title="Permanent link">&para;</a></h3>
+<p><code>apply_df_train_transform</code><em>(<span style='color:green'>ml_transform</span>: <span style='color:blue'>MLTransform</span>) -&gt; pd.Series</em></p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>ml_transform:</strong> <code>pandas_toolkit.ml.MLTransform</code> object containing transform to apply and column name to
+  apply it (normally via e.g. <code>df_train.ml.transforms["standard_scaler"]</code>).</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p>Transformed featured using e.g. df_train data statistics.</p>
+</blockquote>
+<p>Examples
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                             <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]},</span>
+                             <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_validation</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                  <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">]},</span>
+                                  <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;standard_scaler_x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">standard_scaler</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;standard_scaler_x&quot;</span><span class="p">]</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_train</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">transforms</span>
+<span class="p">{</span><span class="s1">&#39;standard_scaler&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">pandas_toolkit</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">MLTransform</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f1af20f0af0</span><span class="o">&gt;</span><span class="p">}</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_validation</span><span class="p">[</span><span class="s2">&quot;standard_scaler_x&quot;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">df_validation</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">apply_df_train_transform</span><span class="p">(</span><span class="n">df_train</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">transforms</span><span class="p">[</span><span class="s2">&quot;standard_scaler&quot;</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df_validation</span><span class="p">[</span><span class="s2">&quot;standard_scaler_x&quot;</span><span class="p">]</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">3</span><span class="p">])</span>
+</code></pre></div></p>
+<hr />
+<h3 id="standard_scaler-source"><code>standard_scaler</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L64">source</a>]</small></em><a class="headerlink" href="#standard_scaler-source" title="Permanent link">&para;</a></h3>
 <p><code>standard_scaler</code><em>(<span style='color:green'>column</span>: <span style='color:blue'>str</span>) -&gt; pd.Series</em></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -476,6 +522,12 @@
   <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html">scikit-learn</a>):
   <code>z = (x - u) / s</code> (<code>u</code> := mean of training samples, <code>s</code> := standard deviation of training samples).</p>
 </blockquote>
+<p><strong>Side Effects</strong></p>
+<blockquote>
+<p>Updates the <code>df.ml.transforms</code> dictionary with key "standard_scaler" and value
+  <code>pandas_toolkit.ml.MLTransform</code> corresponding to the column name and fitted
+  <code>sklearn.preprocessing.StandardScaler</code> object.</p>
+</blockquote>
 <p>Examples
 <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
                        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]},</span>
@@ -483,9 +535,12 @@
 <span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;standard_scaler_x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">standard_scaler</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;standard_scaler_x&quot;</span><span class="p">]</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">transforms</span>
+<span class="p">{</span><span class="s1">&#39;standard_scaler&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">pandas_toolkit</span><span class="o">.</span><span class="n">ml</span><span class="o">.</span><span class="n">MLTransform</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7f1af20f0af0</span><span class="o">&gt;</span><span class="p">}</span>
 </code></pre></div></p>
 <hr />
-<h3 id="train_validation_split-source"><code>train_validation_split</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L39">source</a>]</small></em><a class="headerlink" href="#train_validation_split-source" title="Permanent link">&para;</a></h3>
+<h3 id="train_validation_split-source"><code>train_validation_split</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L100">source</a>]</small></em><a class="headerlink" href="#train_validation_split-source" title="Permanent link">&para;</a></h3>
 <p><code>train_validation_split</code><em>(<span style='color:green'>train_frac</span>: <span style='color:blue'>float</span>, <span style='color:green'>random_seed</span>: <span style='color:blue'>int = None</span>) -&gt; Tuple[pd.DataFrame, pd.DataFrame]</em></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -666,8 +721,8 @@ y_columns names used to train the model are used.</p>
       
     </div>
     
-      <script src="../../assets/javascripts/vendor.3636a4ec.min.js"></script>
-      <script src="../../assets/javascripts/bundle.e9fe3281.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../../assets/javascripts/vendor.2d1db4bd.min.js"></script>
+      <script src="../../assets/javascripts/bundle.6627ddf3.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
