@@ -135,8 +135,8 @@ and could be used in e.g. a production setting.
 
 Examples
 ```python
->>> model = df_train.get_model()
->>> model.predict(x=jnp.ndarray([42]))
+>>> model = df_train.nn.get_model()
+>>> model.predict(x=jnp.array([42]))
 ```
 ---
 ### `hvplot_losses` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L112)]</small>*
