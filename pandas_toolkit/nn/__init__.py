@@ -103,7 +103,7 @@ class NeuralNetworkAccessor:
 
         Examples
         ```python
-        >>> model = df_train.get_model()
+        >>> model = df_train.nn.get_model()
         >>> model.predict(x=jnp.ndarray([42]))
         ```
         """
