@@ -594,7 +594,7 @@ jnp.ndarray</em>.</p>
 <span class="o">...</span>                             <span class="n">net_function</span><span class="o">=</span><span class="n">net_function</span><span class="p">,</span>
 <span class="o">...</span>                             <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mean_squared_error&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>  <span class="c1"># num_epochs</span>
-<span class="o">...</span>     <span class="n">df_train</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">df_validation</span><span class="o">=</span><span class="n">df_validation</span><span class="p">)</span>
+<span class="o">...</span>     <span class="n">df_train</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">df_validation_to_plot</span><span class="o">=</span><span class="n">df_validation</span><span class="p">)</span>
 </code></pre></div></p>
 <hr />
 <h3 id="get_model-source"><code>get_model</code> <em><small>[<a href="https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L98">source</a>]</small></em><a class="headerlink" href="#get_model-source" title="Permanent link">&para;</a></h3>
