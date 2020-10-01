@@ -123,7 +123,7 @@ Examples
 ...                             net_function=net_function,
 ...                             loss="mean_squared_error")
 >>> for _ in range(10):  # num_epochs
-...     df_train = df_train.nn.update(df_validation=df_validation)
+...     df_train = df_train.nn.update(df_validation_to_plot=df_validation)
 ```
 ---
 ### `get_model` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L98)]</small>*
