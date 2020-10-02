@@ -21,6 +21,7 @@ def get_pretty_function_signature(function: Callable) -> str:
         arguments = inspect.getfullargspec(function).args[1:]  # drop self
         input_list = []
         for argument, type_annotation in zip(arguments, type_annotations):
+            type_annotation = type_annotation.split(",  #")[0]  # Remove any comments
             # Colour arguments green, types blue
             input_list.append(f"<span style='color:green'>{argument}</span>: <span style='color:blue'>{type_annotation}</span>")
         inputs = f'({", ".join(input_list)})'
