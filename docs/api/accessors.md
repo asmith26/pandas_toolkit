@@ -95,7 +95,7 @@ pd.DataFrame({"x": [2], "y": [2]}, index=[2])
 
 > **y_columns:** Columns to be used as output for the model.
 
-> **net_function:** A function that defines a haiku.Sequential neural network and how to predict uses it (this
+> **net_function:** A function that defines a dm-haiku neural network and how to predict uses it (this
 function is passed to hk.transform). This should have the signature `net_function(x: jnp.ndarray) ->
 jnp.ndarray`.
 
