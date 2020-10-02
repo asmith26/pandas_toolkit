@@ -2,8 +2,8 @@
 
 ## df.ml. Methods
 ---
-### `apply_df_train_transform` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L26)]</small>*
-`apply_df_train_transform`*(<span style='color:green'>ml_transform</span>: <span style='color:blue'>MLTransform</span>) -> pd.Series*
+### `apply_df_train_transform`
+`apply_df_train_transform`*(<span style='color:green'>ml_transform</span>: <span style='color:blue'>MLTransform</span>) -> pd.Series* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L26)</small>*
 
 **Parameters**
 > **ml_transform:** `pandas_toolkit.ml.MLTransform` object containing transform to apply and column name to
@@ -33,8 +33,8 @@ pd.Series([-1, 1])
 pd.Series([3])
 ```
 ---
-### `standard_scaler` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L64)]</small>*
-`standard_scaler`*(<span style='color:green'>column</span>: <span style='color:blue'>str</span>) -> pd.Series*
+### `standard_scaler`
+`standard_scaler`*(<span style='color:green'>column</span>: <span style='color:blue'>str</span>) -> pd.Series* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L64)</small>*
 
 **Parameters**
 > **column:** Column denoting feature to standardize.
@@ -62,8 +62,8 @@ pd.Series([-1, 1])
 {'standard_scaler': <pandas_toolkit.ml.MLTransform object at 0x7f1af20f0af0>}
 ```
 ---
-### `train_validation_split` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L100)]</small>*
-`train_validation_split`*(<span style='color:green'>train_frac</span>: <span style='color:blue'>float</span>, <span style='color:green'>random_seed</span>: <span style='color:blue'>int = None</span>) -> Tuple[pd.DataFrame, pd.DataFrame]*
+### `train_validation_split`
+`train_validation_split`*(<span style='color:green'>train_frac</span>: <span style='color:blue'>float</span>, <span style='color:green'>random_seed</span>: <span style='color:blue'>int = None</span>) -> Tuple[pd.DataFrame, pd.DataFrame]* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/ml/__init__.py#L100)</small>*
 
 **Parameters**
 > **train_frac:** Fraction of rows to be added to df_train.
@@ -87,8 +87,8 @@ pd.DataFrame({"x": [2], "y": [2]}, index=[2])
 ---
 ## df.nn. Methods
 ---
-### `init` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L38)]</small>*
-`init`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>net_function</span>: <span style='color:blue'>Callable[[jnp.ndarray] jnp.ndarray]</span>, <span style='color:green'>loss</span>: <span style='color:blue'>str</span>, <span style='color:green'>optimizer</span>: <span style='color:blue'>InitUpdate = optix.adam(learning_rate=1e-3)</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>, <span style='color:green'>apply_rng</span>: <span style='color:blue'>jnp.ndarray = None</span>) -> pd.DataFrame*
+### `init`
+`init`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>net_function</span>: <span style='color:blue'>Callable[[jnp.ndarray] jnp.ndarray]</span>, <span style='color:green'>loss</span>: <span style='color:blue'>str</span>, <span style='color:green'>optimizer</span>: <span style='color:blue'>InitUpdate = optix.adam(learning_rate=1e-3)</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>, <span style='color:green'>apply_rng</span>: <span style='color:blue'>jnp.ndarray = None</span>) -> pd.DataFrame* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L38)</small>*
 
 **Parameters**
 > **x_columns:** Columns to be used as input for the model.
@@ -126,8 +126,8 @@ Examples
 ...     df_train = df_train.nn.update(df_validation_to_plot=df_validation)
 ```
 ---
-### `get_model` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L98)]</small>*
-`get_model`*() -> Model*
+### `get_model`
+`get_model`*() -> Model* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L98)</small>*
 
 **Returns**
 > A pandas_toolkit.nn.Model object. As this is not linked to a pd.DataFrame, it is much more lightweight
@@ -139,8 +139,8 @@ Examples
 >>> model.predict(x=jnp.array([42]))
 ```
 ---
-### `hvplot_losses` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L112)]</small>*
-`hvplot_losses`*() -> None*
+### `hvplot_losses`
+`hvplot_losses`*() -> None* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L112)</small>*
 
 **Returns**
 > A Holoviews object for interactive (via Bokeh), real-time ploting of training and validation loss
@@ -152,8 +152,8 @@ Examples
 >>> df_train.nn.hvplot_losses()
 ```
 ---
-### `update` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L141)]</small>*
-`update`*(<span style='color:green'>df_validation_to_plot</span>: <span style='color:blue'>pd.DataFrame = None</span>) -> pd.DataFrame*
+### `update`
+`update`*(<span style='color:green'>df_validation_to_plot</span>: <span style='color:blue'>pd.DataFrame = None</span>) -> pd.DataFrame* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L141)</small>*
 
 **Parameters**
 > **df_validation_to_plot:** Validation data to evaluate and update loss curve with.
@@ -167,8 +167,8 @@ Examples
 ...     df_train = df_train.nn.update(df_validation_to_plot=df_validation)
 ```
 ---
-### `predict` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L174)]</small>*
-`predict`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series*
+### `predict`
+`predict`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L174)</small>*
 
 **Parameters**
 > **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
@@ -183,8 +183,8 @@ Examples
 >>> df_new["predictions"] = df_new.nn.predict()
 ```
 ---
-### `evaluate` *<small>[[source](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L195)]</small>*
-`evaluate`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series*
+### `evaluate`
+`evaluate`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L195)</small>*
 
 **Parameters**
 > **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
@@ -193,12 +193,12 @@ Examples
 y_columns names used to train the model are used.
 
 **Returns**
-> A pd.Series of evaluations.
+> Evaluation of the prediction using the loss_function provided in `df.nn.init(...)`.
 
 Examples
 ```python
 >>> df_test = pd.DataFrame({"x": [-1, 0, 1], "y": [0, 0, 1]})
 >>> df_test.model = df_train.nn.get_model()
->>> df_test["evaluation_loss"] = df_test.nn.evaluate()
+>>> df_test.nn.evaluate()
 ```
 ---

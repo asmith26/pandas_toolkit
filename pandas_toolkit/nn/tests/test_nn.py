@@ -82,10 +82,20 @@ class TestWorkflow(unittest.TestCase):
         expected_loss = 0
         self.assertEqual(expected_loss, actual_loss)
 
+        #  ensure batch_size option works
+        actual_loss = df_test.nn.evaluate(batch_size=2)
+        expected_loss = 0
+        self.assertEqual(expected_loss, actual_loss)
+
         # New data
         df_new = pd.DataFrame({"x": [-10, -5, 22]})
         df_new.model = df_train.nn.get_model()
 
         actual_predictions = df_new.nn.predict()
+        expected_predictions = jnp.array([[0], [0], [22]])
+        np.testing.assert_array_equal(expected_predictions, actual_predictions)
+
+      #  ensure batch_size option works
+        actual_predictions = df_new.nn.predict(batch_size=2)
         expected_predictions = jnp.array([[0], [0], [22]])
         np.testing.assert_array_equal(expected_predictions, actual_predictions)

@@ -18,10 +18,13 @@ class Model(object):
         loss: str,
         optimizer: InitUpdate,
         example_x: jnp.ndarray,
-        apply_rng: jnp.ndarray = None,
+        apply_rng: bool,
+        rng_seed: int,
     ):
         self.net_transform = hk.transform(net_function)
         self.apply_rng = apply_rng
+        self.rng_sequence = hk.PRNGSequence(rng_seed)
+
         self.optimizer = optimizer
 
         self.loss_function = get_haiku_loss_function(self.net_transform, loss)
@@ -52,8 +55,8 @@ class Model(object):
         self.jitted_evaluate = jitted_evaluate
 
         @jax.jit
-        def jitted_predict(params: hk.Params, x: jnp.ndarray) -> jnp.ndarray:
-            return self.net_transform.apply(params, self.apply_rng, x)
+        def jitted_predict(params: hk.Params, x: jnp.ndarray, rng: jnp.ndarray) -> jnp.ndarray:
+            return self.net_transform.apply(params, rng, x)
 
         self.jitted_predict = jitted_predict
 
@@ -64,7 +67,8 @@ class Model(object):
         return self.jitted_evaluate(self.params, x, y)
 
     def predict(self, x: jnp.ndarray) -> jnp.ndarray:
-        return self.jitted_predict(self.params, x)
+        rng = self.rng_sequence.next() if self.apply_rng else None
+        return self.jitted_predict(self.params, x, rng)
 
     def _update(self, x: jnp.ndarray, y: jnp.ndarray) -> None:
         """Learning rule (e.g. stochastic gradient descent)."""
@@ -73,6 +77,5 @@ class Model(object):
     def reset_params(self) -> None:
         self.num_epochs = 0
 
-        rng = jax.random.PRNGKey(42)
-        self.params = self.net_transform.init(rng, self._example_x)
+        self.params = self.net_transform.init(self.rng_sequence.next(), self._example_x)
         self.opt_state = self.optimizer.init(self.params)
