@@ -95,7 +95,7 @@ class TestWorkflow(unittest.TestCase):
         expected_predictions = jnp.array([[0], [0], [22]])
         np.testing.assert_array_equal(expected_predictions, actual_predictions)
 
-      #  ensure batch_size option works
+        #  ensure batch_size option works
         actual_predictions = df_new.nn.predict(batch_size=2)
         expected_predictions = jnp.array([[0], [0], [22]])
         np.testing.assert_array_equal(expected_predictions, actual_predictions)

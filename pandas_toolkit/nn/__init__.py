@@ -28,11 +28,10 @@ def _get_batch(
 
     df_train_batch = df_train.iloc[start_batch_idx:end_batch_idx]
     if y_columns is None:
-        return Batch( x=jnp.array(df_train_batch.loc[:, x_columns].values), y=None)
+        return Batch(x=jnp.array(df_train_batch.loc[:, x_columns].values), y=None)
     return Batch(
         x=jnp.array(df_train_batch.loc[:, x_columns].values), y=jnp.array(df_train_batch.loc[:, y_columns].values)
     )
-
 
 
 @pd.api.extensions.register_dataframe_accessor("nn")
@@ -51,7 +50,7 @@ class NeuralNetworkAccessor:
         optimizer: InitUpdate = optix.adam(learning_rate=1e-3),
         batch_size: int = None,
         apply_rng: bool = False,
-        rng_seed: int = random.randint(0, int(1e19)),
+        rng_seed: int = random.randint(0, int(1e19)),  # nosec
     ) -> pd.DataFrame:
         """
         **Parameters**
