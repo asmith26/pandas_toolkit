@@ -27,10 +27,10 @@ class MachineLearningAccessor:
         """
         **Parameters**
         > **ml_transform:** `pandas_toolkit.ml.MLTransform` object containing transform to apply and column name to
-          apply it (normally via e.g. `df_train.ml.transforms["standard_scaler"]`).
+          be applied to (normally via e.g. `df_train.ml.transforms["standard_scaler"]`).
 
         **Returns**
-        > Transformed featured using e.g. df_train data statistics.
+        > Transformed featured using e.g. `df_train` data statistics.
 
         Examples
         ```python
@@ -105,7 +105,7 @@ class MachineLearningAccessor:
         > **random_seed:** Seed for the random number generator (e.g. for reproducible splits).
 
         **Returns**
-        > df_train and df_validation, split from the original dataframe.
+        > `df_train` and `df_validation`, split from the original dataframe.
 
         Examples
         ```python

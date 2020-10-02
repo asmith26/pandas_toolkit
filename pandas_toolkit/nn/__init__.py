@@ -21,12 +21,12 @@ def _get_num_batches(num_rows: int, batch_size: Optional[int]) -> int:
 
 
 def _get_batch(
-    df_train: pd.DataFrame, batch_number: int, batch_size: int, x_columns: List[str], y_columns: Optional[List[str]]
+    df: pd.DataFrame, batch_number: int, batch_size: int, x_columns: List[str], y_columns: Optional[List[str]]
 ) -> Batch:
     start_batch_idx = batch_number * batch_size
     end_batch_idx = (batch_number + 1) * batch_size
 
-    df_train_batch = df_train.iloc[start_batch_idx:end_batch_idx]
+    df_train_batch = df.iloc[start_batch_idx:end_batch_idx]
     if y_columns is None:
         return Batch(x=jnp.array(df_train_batch.loc[:, x_columns].values), y=None)
     return Batch(
@@ -37,7 +37,7 @@ def _get_batch(
 @pd.api.extensions.register_dataframe_accessor("nn")
 class NeuralNetworkAccessor:
     def __init__(self, df: pd.DataFrame):
-        self._df_train = df
+        self._df = df
 
         self.num_rows = len(df)
 
@@ -50,7 +50,7 @@ class NeuralNetworkAccessor:
         optimizer: InitUpdate = optix.adam(learning_rate=1e-3),
         batch_size: int = None,
         apply_rng: bool = False,
-        rng_seed: int = random.randint(0, int(1e19)),  # nosec
+        rng_seed: int = random.randint(0, int(1e15)),  # nosec
     ) -> pd.DataFrame:
         """
         **Parameters**
@@ -59,8 +59,8 @@ class NeuralNetworkAccessor:
         > **y_columns:** Columns to be used as output for the model.
 
         > **net_function:** A function that defines a haiku.Sequential neural network and how to predict uses it (this
-        function is passed to hk.transform). This should have the signature *net_function(x: jnp.ndarray) ->
-        jnp.ndarray*.
+        function is passed to hk.transform). This should have the signature `net_function(x: jnp.ndarray) ->
+        jnp.ndarray`.
 
         > **loss:** Loss function to use. See available loss functions in
         [jax_toolkit](https://asmith26.github.io/jax_toolkit/losses_and_metrics/).
@@ -69,13 +69,13 @@ class NeuralNetworkAccessor:
 
         > **batch_size:** Batch size to use. If not specified, the number of rows in the entire dataframe is used.
 
-        > **apply_rng:** If your net_function is non-deterministic, set this value to True to enable you model to
+        > **apply_rng:** If your `net_function` is non-deterministic, set this value to `True` to enable you model to
         predict with randomness.
 
         > **rng_seed:** Set a seed for reprodubility.
 
         **Returns**
-        > A pd.DataFrame containing a neural network model ready for training with pandas_toolkit.
+        > `df` containing a neural network model ready for training with pandas_toolkit.
 
         Examples
         ```python
@@ -91,22 +91,22 @@ class NeuralNetworkAccessor:
         ...     df_train = df_train.nn.update(df_validation_to_plot=df_validation)
         ```
         """
-        self._df_train._num_batches = _get_num_batches(num_rows=self.num_rows, batch_size=batch_size)
-        self._df_train._batch_size = batch_size if batch_size is not None else self.num_rows
+        self._df._num_batches = _get_num_batches(num_rows=self.num_rows, batch_size=batch_size)
+        self._df._batch_size = batch_size if batch_size is not None else self.num_rows
 
         num_features = len(x_columns)
-        example_x = jnp.zeros(shape=[self._df_train._batch_size, num_features])
-        self._df_train.model = Model(net_function, loss, optimizer, example_x, apply_rng, rng_seed)
+        example_x = jnp.zeros(shape=[self._df._batch_size, num_features])
+        self._df.model = Model(net_function, loss, optimizer, example_x, apply_rng, rng_seed)
 
-        self._df_train.model._x_columns = x_columns
-        self._df_train.model._y_columns = y_columns
+        self._df.model._x_columns = x_columns
+        self._df.model._y_columns = y_columns
 
-        return self._df_train
+        return self._df
 
     def get_model(self) -> Model:
         """
         **Returns**
-        > A pandas_toolkit.nn.Model object. As this is not linked to a pd.DataFrame, it is much more lightweight
+        > A `pandas_toolkit.nn.Model` object. As this is not linked to a `pd.DataFrame`, it is much more lightweight
         and could be used in e.g. a production setting.
 
         Examples
@@ -115,7 +115,7 @@ class NeuralNetworkAccessor:
         >>> model.predict(x=jnp.array([42]))
         ```
         """
-        return self._df_train.model.copy()  # type: ignore
+        return self._df.model.copy()  # type: ignore
 
     def hvplot_losses(self):  # type: ignore  # pragma: no cover
         """
@@ -139,7 +139,7 @@ class NeuralNetworkAccessor:
         df_validation.model = self.get_model()
         df_losses = pd.DataFrame(
             {
-                "epoch": [self._df_train.model.num_epochs],
+                "epoch": [self._df.model.num_epochs],
                 "train_loss": self.evaluate().tolist(),
                 "validation_loss": df_validation.nn.evaluate().tolist(),
             }
@@ -152,7 +152,7 @@ class NeuralNetworkAccessor:
         > **df_validation_to_plot:** Validation data to evaluate and update loss curve with.
 
         **Returns**
-        > A pd.DataFrame containing an updated neural network model (trained on one extra epoch).
+        > `df` containing an updated neural network model (trained on one extra epoch).
 
         Examples
         ```python
@@ -160,29 +160,25 @@ class NeuralNetworkAccessor:
         ...     df_train = df_train.nn.update(df_validation_to_plot=df_validation)
         ```
         """
-        df_train = self._df_train.sample(frac=1)
+        df_train = self._df.sample(frac=1)
 
-        for batch_number in range(self._df_train._num_batches):
+        for batch_number in range(self._df._num_batches):
             batch = _get_batch(
-                df_train,
-                batch_number,
-                self._df_train._batch_size,
-                self._df_train.model._x_columns,
-                self._df_train.model._y_columns,
+                df_train, batch_number, self._df._batch_size, self._df.model._x_columns, self._df.model._y_columns
             )
-            self._df_train.model._update(batch.x, batch.y)
+            self._df.model._update(batch.x, batch.y)
 
-        self._df_train.model.num_epochs += 1
+        self._df.model.num_epochs += 1
 
         if df_validation_to_plot is not None:
             self._update_hvplot_losses(df_validation_to_plot)  # pragma: no cover
 
-        return self._df_train
+        return self._df
 
     def predict(self, x_columns: List[str] = None, batch_size: int = None) -> jnp.ndarray:
         """
         **Parameters**
-        > **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
+        > **x_columns:** Columns to predict on. If `None`, the same `x_columns` names used to train the model are used.
 
         > **batch_size:** Batch size to use. If not specified, the entire dataset is used.
 
@@ -197,35 +193,29 @@ class NeuralNetworkAccessor:
         ```
         """
         if x_columns is None:
-            x_columns = self._df_train.model._x_columns
+            x_columns = self._df.model._x_columns
         batch_size = batch_size if batch_size is not None else self.num_rows
         num_batches = _get_num_batches(num_rows=self.num_rows, batch_size=batch_size)
 
         predictions = []
         for batch_number in range(num_batches):
-            batch = _get_batch(
-                self._df_train,
-                batch_number,
-                batch_size,
-                x_columns,
-                None,
-            )
-            predictions.append(self._df_train.model.predict(batch.x))
+            batch = _get_batch(self._df, batch_number, batch_size, x_columns, None)
+            predictions.append(self._df.model.predict(batch.x))
 
         return jnp.vstack(predictions)
 
     def evaluate(self, x_columns: List[str] = None, y_columns: List[str] = None, batch_size: int = None) -> jnp.ndarray:
         """
         **Parameters**
-        > **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
+        > **x_columns:** Columns to predict on. If `None`, the same `x_columns` names used to train the model are used.
 
         > **y_columns:** Columns with true output values to compare predicted values with. If `None`, the same
-        y_columns names used to train the model are used.
+        `y_columns` names used to train the model are used.
 
         > **batch_size:** Batch size to use. If not specified, the entire dataset is used.
 
         **Returns**
-        > Evaluation of the prediction using the loss_function provided in `df.nn.init(...)`.
+        > Evaluation of the prediction using the `loss_function` provided in `df.nn.init(...)`.
 
         Examples
         ```python
@@ -235,21 +225,15 @@ class NeuralNetworkAccessor:
         ```
         """
         if x_columns is None:
-            x_columns = self._df_train.model._x_columns
+            x_columns = self._df.model._x_columns
         if y_columns is None:
-            y_columns = self._df_train.model._y_columns
+            y_columns = self._df.model._y_columns
         batch_size = batch_size if batch_size is not None else self.num_rows
         num_batches = _get_num_batches(num_rows=self.num_rows, batch_size=batch_size)
 
         losses = []
         for batch_number in range(num_batches):
-            batch = _get_batch(
-                self._df_train,
-                batch_number,
-                batch_size,
-                x_columns,
-                y_columns,
-            )
-            losses.append(self._df_train.model.evaluate(batch.x, batch.y))
+            batch = _get_batch(self._df, batch_number, batch_size, x_columns, y_columns)
+            losses.append(self._df.model.evaluate(batch.x, batch.y))
 
         return jnp.average(losses)

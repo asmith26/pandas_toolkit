@@ -7,10 +7,10 @@
 
 **Parameters**
 > **ml_transform:** `pandas_toolkit.ml.MLTransform` object containing transform to apply and column name to
-  apply it (normally via e.g. `df_train.ml.transforms["standard_scaler"]`).
+  be applied to (normally via e.g. `df_train.ml.transforms["standard_scaler"]`).
 
 **Returns**
-> Transformed featured using e.g. df_train data statistics.
+> Transformed featured using e.g. `df_train` data statistics.
 
 Examples
 ```python
@@ -71,7 +71,7 @@ pd.Series([-1, 1])
 > **random_seed:** Seed for the random number generator (e.g. for reproducible splits).
 
 **Returns**
-> df_train and df_validation, split from the original dataframe.
+> `df_train` and `df_validation`, split from the original dataframe.
 
 Examples
 ```python
@@ -88,7 +88,7 @@ pd.DataFrame({"x": [2], "y": [2]}, index=[2])
 ## df.nn. Methods
 ---
 ### `init`
-`init`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>net_function</span>: <span style='color:blue'>Callable[[jnp.ndarray] jnp.ndarray]</span>, <span style='color:green'>loss</span>: <span style='color:blue'>str</span>, <span style='color:green'>optimizer</span>: <span style='color:blue'>InitUpdate = optix.adam(learning_rate=1e-3)</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>, <span style='color:green'>apply_rng</span>: <span style='color:blue'>jnp.ndarray = None</span>) -> pd.DataFrame* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L38)</small>*
+`init`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str]</span>, <span style='color:green'>net_function</span>: <span style='color:blue'>Callable[[jnp.ndarray] jnp.ndarray]</span>, <span style='color:green'>loss</span>: <span style='color:blue'>str</span>, <span style='color:green'>optimizer</span>: <span style='color:blue'>InitUpdate = optix.adam(learning_rate=1e-3)</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>, <span style='color:green'>apply_rng</span>: <span style='color:blue'>bool = False</span>, <span style='color:green'>rng_seed</span>: <span style='color:blue'>int = random.randint(0, int(1e15)),  # nosec</span>) -> pd.DataFrame* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L44)</small>*
 
 **Parameters**
 > **x_columns:** Columns to be used as input for the model.
@@ -96,8 +96,8 @@ pd.DataFrame({"x": [2], "y": [2]}, index=[2])
 > **y_columns:** Columns to be used as output for the model.
 
 > **net_function:** A function that defines a haiku.Sequential neural network and how to predict uses it (this
-function is passed to hk.transform). This should have the signature *net_function(x: jnp.ndarray) ->
-jnp.ndarray*.
+function is passed to hk.transform). This should have the signature `net_function(x: jnp.ndarray) ->
+jnp.ndarray`.
 
 > **loss:** Loss function to use. See available loss functions in
 [jax_toolkit](https://asmith26.github.io/jax_toolkit/losses_and_metrics/).
@@ -106,11 +106,13 @@ jnp.ndarray*.
 
 > **batch_size:** Batch size to use. If not specified, the number of rows in the entire dataframe is used.
 
-> **apply_rng:** If your net_function is non-deterministic, set this value to some `jax.random.PRNGKey(seed)`
- for repeatable outputs.
+> **apply_rng:** If your `net_function` is non-deterministic, set this value to `True` to enable you model to
+predict with randomness.
+
+> **rng_seed:** Set a seed for reprodubility.
 
 **Returns**
-> A pd.DataFrame containing a neural network model ready for training with pandas_toolkit.
+> `df` containing a neural network model ready for training with pandas_toolkit.
 
 Examples
 ```python
@@ -127,10 +129,10 @@ Examples
 ```
 ---
 ### `get_model`
-`get_model`*() -> Model* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L98)</small>*
+`get_model`*() -> Model* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L106)</small>*
 
 **Returns**
-> A pandas_toolkit.nn.Model object. As this is not linked to a pd.DataFrame, it is much more lightweight
+> A `pandas_toolkit.nn.Model` object. As this is not linked to a `pd.DataFrame`, it is much more lightweight
 and could be used in e.g. a production setting.
 
 Examples
@@ -140,7 +142,7 @@ Examples
 ```
 ---
 ### `hvplot_losses`
-`hvplot_losses`*() -> None* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L112)</small>*
+`hvplot_losses`*() -> None* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L120)</small>*
 
 **Returns**
 > A Holoviews object for interactive (via Bokeh), real-time ploting of training and validation loss
@@ -153,13 +155,13 @@ Examples
 ```
 ---
 ### `update`
-`update`*(<span style='color:green'>df_validation_to_plot</span>: <span style='color:blue'>pd.DataFrame = None</span>) -> pd.DataFrame* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L141)</small>*
+`update`*(<span style='color:green'>df_validation_to_plot</span>: <span style='color:blue'>pd.DataFrame = None</span>) -> pd.DataFrame* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L149)</small>*
 
 **Parameters**
 > **df_validation_to_plot:** Validation data to evaluate and update loss curve with.
 
 **Returns**
-> A pd.DataFrame containing an updated neural network model (trained on one extra epoch).
+> `df` containing an updated neural network model (trained on one extra epoch).
 
 Examples
 ```python
@@ -168,10 +170,12 @@ Examples
 ```
 ---
 ### `predict`
-`predict`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L174)</small>*
+`predict`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>) -> jnp.ndarray* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L178)</small>*
 
 **Parameters**
-> **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
+> **x_columns:** Columns to predict on. If `None`, the same `x_columns` names used to train the model are used.
+
+> **batch_size:** Batch size to use. If not specified, the entire dataset is used.
 
 **Returns**
 > A pd.Series of predictions.
@@ -184,16 +188,18 @@ Examples
 ```
 ---
 ### `evaluate`
-`evaluate`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str] = None</span>) -> pd.Series* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L195)</small>*
+`evaluate`*(<span style='color:green'>x_columns</span>: <span style='color:blue'>List[str] = None</span>, <span style='color:green'>y_columns</span>: <span style='color:blue'>List[str] = None</span>, <span style='color:green'>batch_size</span>: <span style='color:blue'>int = None</span>) -> jnp.ndarray* *<small>[[source]](https://github.com/asmith26/pandas_toolkit/blob/master/pandas_toolkit/nn/__init__.py#L207)</small>*
 
 **Parameters**
-> **x_columns:** Columns to predict on. If `None`, the same x_columns names used to train the model are used.
+> **x_columns:** Columns to predict on. If `None`, the same `x_columns` names used to train the model are used.
 
 > **y_columns:** Columns with true output values to compare predicted values with. If `None`, the same
-y_columns names used to train the model are used.
+`y_columns` names used to train the model are used.
+
+> **batch_size:** Batch size to use. If not specified, the entire dataset is used.
 
 **Returns**
-> Evaluation of the prediction using the loss_function provided in `df.nn.init(...)`.
+> Evaluation of the prediction using the `loss_function` provided in `df.nn.init(...)`.
 
 Examples
 ```python
