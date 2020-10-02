@@ -39,7 +39,7 @@ class NeuralNetworkAccessor:
     def __init__(self, df: pd.DataFrame):
         self._df = df
 
-        self.num_rows = len(df)
+        self._num_rows = len(df)
 
     def init(
         self,
@@ -91,11 +91,11 @@ class NeuralNetworkAccessor:
         ...     df_train = df_train.nn.update(df_validation_to_plot=df_validation)
         ```
         """
-        self._df._num_batches = _get_num_batches(num_rows=self.num_rows, batch_size=batch_size)
-        self._df._batch_size = batch_size if batch_size is not None else self.num_rows
+        self._num_batches = _get_num_batches(num_rows=self._num_rows, batch_size=batch_size)
+        self._batch_size = batch_size if batch_size is not None else self._num_rows
 
         num_features = len(x_columns)
-        example_x = jnp.zeros(shape=[self._df._batch_size, num_features])
+        example_x = jnp.zeros(shape=[self._batch_size, num_features])
         self._df.model = Model(net_function, loss, optimizer, example_x, apply_rng, rng_seed)
 
         self._df.model._x_columns = x_columns
@@ -140,8 +140,8 @@ class NeuralNetworkAccessor:
         df_losses = pd.DataFrame(
             {
                 "epoch": [self._df.model.num_epochs],
-                "train_loss": self.evaluate().tolist(),
-                "validation_loss": df_validation.nn.evaluate().tolist(),
+                "train_loss": self.evaluate(batch_size=self._batch_size).tolist(),
+                "validation_loss": df_validation.nn.evaluate(batch_size=self._batch_size).tolist(),
             }
         )
         self.sdf.emit(df_losses)
@@ -162,9 +162,9 @@ class NeuralNetworkAccessor:
         """
         df_train = self._df.sample(frac=1)
 
-        for batch_number in range(self._df._num_batches):
+        for batch_number in range(self._num_batches):
             batch = _get_batch(
-                df_train, batch_number, self._df._batch_size, self._df.model._x_columns, self._df.model._y_columns
+                df_train, batch_number, self._batch_size, self._df.model._x_columns, self._df.model._y_columns
             )
             self._df.model._update(batch.x, batch.y)
 
@@ -194,8 +194,8 @@ class NeuralNetworkAccessor:
         """
         if x_columns is None:
             x_columns = self._df.model._x_columns
-        batch_size = batch_size if batch_size is not None else self.num_rows
-        num_batches = _get_num_batches(num_rows=self.num_rows, batch_size=batch_size)
+        batch_size = batch_size if batch_size is not None else self._num_rows
+        num_batches = _get_num_batches(num_rows=self._num_rows, batch_size=batch_size)
 
         predictions = []
         for batch_number in range(num_batches):
@@ -228,8 +228,8 @@ class NeuralNetworkAccessor:
             x_columns = self._df.model._x_columns
         if y_columns is None:
             y_columns = self._df.model._y_columns
-        batch_size = batch_size if batch_size is not None else self.num_rows
-        num_batches = _get_num_batches(num_rows=self.num_rows, batch_size=batch_size)
+        batch_size = batch_size if batch_size is not None else self._num_rows
+        num_batches = _get_num_batches(num_rows=self._num_rows, batch_size=batch_size)
 
         losses = []
         for batch_number in range(num_batches):
