@@ -5,7 +5,7 @@
 #    pip-compile
 #
 absl-py==0.11.0           # via dm-haiku, jax, jaxlib
-dm-haiku==0.0.2           # via pandas_toolkit (setup.py)
+dm-haiku==0.0.8           # via pandas_toolkit (setup.py)
 jax-toolkit==0.1.2        # via pandas_toolkit (setup.py)
 jax==0.2.5               # via jax-toolkit, pandas_toolkit (setup.py)
 jaxlib==0.1.56            # via jax-toolkit, pandas_toolkit (setup.py)
